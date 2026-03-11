@@ -1,10 +1,50 @@
-# Ubuntu on the Milk-V Duo
-![F-MbY2FXUAAk21P](https://github.com/bassusteur/milkv-duo-ubuntu/assets/42449683/3dcdbd84-12a6-4c86-969c-92a2e9e92496)
+# Ubuntu on the Milk-V Duo S
+New and Improved for 2026!
+
+<img width="1280" height="836" alt="image" src="https://github.com/user-attachments/assets/6a2d1765-dc41-4cb2-b000-97cf976d3f32" />
+
+*For now, this is __ONLY__ for the Duo S, but the Duo 256M is planned. Duo 64M is not supported*
 
 ## Credits
 ![great friend julie](https://github.com/tvlad1234)
 ![rootfs guide for risc-v](https://github.com/carlosedp/riscv-bringup/blob/master/Ubuntu-Rootfs-Guide.md)
 ![DO NOT THE CAT!!!](https://github.com/Mnux9)
+
+## What it is
+
+This will be a monorepo set up with submodules to pull in:
+
+- Milk-V duo-buildroot-sdk with some minor patches from me
+- Linux 7.0 with all necessary Milk-V Duo S patches
+- Scripts for building .deb packages:
+  - Linux 7.0 modules
+  - User space scripts for setting USB operating mode
+- Scripts for generating an Ubuntu 22.04/24.04 userspace rootfs
+
+## Features
+
+- 3 USB modes, selectable via systemd service:
+  - USB Host: Use the USB A port to access peripheral devices
+  - USB Serial (ACM): Connect to a PC with USB-C and log in over serial
+  - USB Network (CDC-NCM) [formerly RNDIS]: Connect to a PC with USB-C and log in over SSH or otherwise access over network protocols
+- Modern Linux 7.0 mainline kernel (with minor device tree and driver patches)
+- Modern Ubuntu 22.04/24.04 userspace
+- Full USB Gadget support
+- Full USB device support
+- Support for Duo S Ethernet
+
+## Missing Features
+
+- Wifi (not mainlined, investigating vendor drivers)
+- Bluetooth (same as wifi)
+- Software reboot (system hangs waiting for hardware reset button)
+- U-Boot 2026.1 (system depends on vendor-supplied first stage bootloader (FSBL) which uses U-Boot 2021.10)
+- MIPI / CSI (Camera interface)
+- TPU support
+- Multimedia support (VIP)
+
+[Below this line is old documentation, likely outdated, updates coming]
+===
 
 ## Setup 
 1. Ubuntu 22.04 LTS installed on a virtual machine
