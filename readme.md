@@ -4,11 +4,7 @@ New and Improved for 2026!
 <img width="1280" height="836" alt="image" src="https://github.com/user-attachments/assets/6a2d1765-dc41-4cb2-b000-97cf976d3f32" />
 
 *For now, this is __ONLY__ for the Duo S, but the Duo 256M is planned. Duo 64M is not supported*
-
-## Credits
-![great friend julie](https://github.com/tvlad1234)
-![rootfs guide for risc-v](https://github.com/carlosedp/riscv-bringup/blob/master/Ubuntu-Rootfs-Guide.md)
-![DO NOT THE CAT!!!](https://github.com/Mnux9)
+*(I have ordered myself a Duo 64M, though, so I might still port the kernel work over)*
 
 ## What it is
 
@@ -19,7 +15,7 @@ This will be a monorepo set up with submodules to pull in:
 - Scripts for building .deb packages:
   - Linux 7.0 modules
   - User space scripts for setting USB operating mode
-- Scripts for generating an Ubuntu 22.04/24.04 userspace rootfs
+- Scripts for generating an Ubuntu 22.04 userspace rootfs
 
 ## Features
 
@@ -28,23 +24,96 @@ This will be a monorepo set up with submodules to pull in:
   - USB Serial (ACM): Connect to a PC with USB-C and log in over serial
   - USB Network (CDC-NCM) [formerly RNDIS]: Connect to a PC with USB-C and log in over SSH or otherwise access via network protocols
 - Modern Linux 7.0 mainline kernel (with minor device tree and driver patches)
-- Modern Ubuntu 22.04/24.04 userspace
+- Modern Ubuntu 22.04 userspace
 - Full USB Gadget support
 - Full USB Host support
 - Support for Duo S Ethernet
+- Working Wifi (at least 2.4GHz, 5GHz untested)
+- Working Bluetooth
+- I2S Audio driver (untested)
 
 ## Missing Features
 
-- Wifi (not mainlined, investigating vendor drivers)
-- Bluetooth (same as wifi)
+- ~~Wifi (not mainlined, investigating vendor drivers)~~ nah bb wifi works now :sunglasses:
+- ~~Bluetooth~~ (same as wifi) :sunglasses:
 - ~~Software reboot (system hangs waiting for hardware reset button)~~ nah we got this now :)
 - U-Boot 2026.1 (system depends on vendor-supplied first stage bootloader (FSBL) which uses U-Boot 2021.10)
 - MIPI / CSI (Camera interface)
 - TPU support
 - Multimedia support (VIP)
 
+## Goals
+
+This is not your typical embedded distribution. Because the Duo S features full-size Ethernet and USB-A ports, in addition to all the typical embedded I/O, the kernel build for this distro features dozens, if not hundreds, of device drivers (built as modules): Game controllers, MIDI devices, HID, serial, printers, modems, sensors, most anything you can think of. This means the kernel itself is over 20MB. 
+
+The idea is that if you have a USB-A port, you oughtta be able to use it. The Duo S isn't really powerful enough to be a desktop, but I can envision some fun ways to incorporate it as a Linux Gadget or a mini server or a media player or whatever. I also want this to be a good entrypoint for beginners, because this board has a lot of potential.
+
+You can always reconfigure the kernel to remove what you don't want.
+
+The Milk-V SDK usage patterns are in some places replicated (hardware state is largely managed by shell scripts, USB NCM mode is the default) but the specific instructions are different. 
+
+## Notes
+
+- `/dev/ttyS1` is dedicated to the Bluetooth controller, at least for now. I will see about binding it to ttyS3 so that the other UARTS can take 1 and 2.
+- While USB-C Serial is available, it doesn't initialize until late in the boot process, and does not display the kernel console. You will need to use the UART0 pins and connect to an adapter to troubleshoot boot problems.
+- Board has soft-reset but not soft-poweroff. `systemctl poweroff` will halt the system, but it remains powered as long as it's supplied.
+
+### Kernel Methodology
+
+As much as possible is "upstream"/"mainline". Some of the patches applied are likely to be pulled into Linux 7.0 (and some listed on the wiki as unmerged, like audio, have actually been pulled already) and a few I made myself. Wifi drivers are hacky and a little bit vibed but they work so ¯\_(ツ)_/¯
+
+1. Started with basline Linux 7.0-rc3 (and plan to rebase on future rcs, up to 7.0)
+2. Added LKML patches linked from [the Sophgo Linux Wiki](https://github.com/sophgo/linux/wiki)
+3. Added my own patches to the device tree:
+  4. Fix device tree after applying upstream mdio-mux driver patch
+  5. Enable USB OTG in Milk-V Duo S device tree
+  6. Add watchdog timer device tree node (upstream watchdog patch doesn't apply cleanly)
+  7. Enable watchdog timer device node in Milk-V Duo S device tree
+  8. Enable `uart4` for `hci_uart` in Milk-V Duo S device tree
+
+## Usage
+
+### Default Password
+`root` / `milkv`
+
+### USB
+
+USB drivers are built into the kernel. The `milkv-usb-duos` package contains userspace scripts for switching modes and a systemd unit for setting modes at boot time.
+
+The system is set up for USB CDC NCM by default. This is the modern equivalent of RNDIS; it configures the board as a "USB Ethernet Gadget" and allows you to talk to the board via SSH over USB:
+
+`ssh root@192.168.42.1`
+
+This is the same as the Milk-V default, so you [can use their docs to get set up](https://milkv.io/docs/duo/getting-started/setup)
+
+You can switch to Host Mode (USB-A) with:
+
+`milkv-usb-mode host` and then reboot. There are systemd services that handle the initialization. If you disable those, use `milkv-usb-init` to set things up after boot.
+
+### WiFi + BT
+
+There are 3 packages relevant to wireless on the Duo S:
+
+- `milkv-wireless-duos`: Userspace scripts and systemd units to enable wireless hardware (technically optional)
+- `aic8800-milkv-firmware`: Vendor firmware binary blobs (required)
+- `aic8800-milkv-modules-duos`: Kernel modules for the `linux-image-milkv-duos_7.0~rc4-qkj1` kernel (default kernel for this setup) (required)
+
+These packages are all installed in a default installation. Wifi and Bluetooth are both enabled by default. Disable one or the other with:
+
+```sh
+systemctl disable milkv-wifi
+systemctl disable milkv-bluetooth
+```
+
+Note that since both Bluetooth and Wifi are on the same chip and use the same driver, both will be enabled at the hardware level when either script is enabled. The difference is that the Bluetooth service starts an `hciattach` session as a daemon, the WiFi service does not. Both services will load the necessary modules for either mode. Disable both services (or prevent loading the `aic8800_bsp` driver) to keep the wireless chip powered off.
+
 [Below this line is old documentation, likely outdated, updates coming]
 ===
+
+## Credits
+![great friend julie](https://github.com/tvlad1234)
+![rootfs guide for risc-v](https://github.com/carlosedp/riscv-bringup/blob/master/Ubuntu-Rootfs-Guide.md)
+![DO NOT THE CAT!!!](https://github.com/Mnux9)
 
 ## Setup 
 1. Ubuntu 22.04 LTS installed on a virtual machine
