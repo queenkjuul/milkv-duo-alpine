@@ -52,12 +52,6 @@ You can always reconfigure the kernel to remove what you don't want.
 
 The Milk-V SDK usage patterns are in some places replicated (hardware state is largely managed by shell scripts, USB NCM mode is the default) but the specific instructions are different. 
 
-## Notes
-
-- `/dev/ttyS1` is dedicated to the Bluetooth controller, at least for now. I will see about binding it to ttyS3 so that the other UARTS can take 1 and 2.
-- While USB-C Serial is available, it doesn't initialize until late in the boot process, and does not display the kernel console. You will need to use the UART0 pins and connect to an adapter to troubleshoot boot problems.
-- Board has soft-reset but not soft-poweroff. `systemctl poweroff` will halt the system, but it remains powered as long as it's supplied.
-
 ### Kernel Methodology
 
 As much as possible is "upstream"/"mainline". Some of the patches applied are likely to be pulled into Linux 7.0 (and some listed on the wiki as unmerged, like audio, have actually been pulled already) and a few I made myself. Wifi drivers are hacky and a little bit vibed but they work so ¯\_(ツ)_/¯
@@ -71,7 +65,12 @@ As much as possible is "upstream"/"mainline". Some of the patches applied are li
   7. Enable watchdog timer device node in Milk-V Duo S device tree
   8. Enable `uart4` for `hci_uart` in Milk-V Duo S device tree
 
-## Usage
+## Using the System
+
+In general, [this portion of the Milk-V docs also applies to this distribution](https://milkv.io/docs/duo/getting-started/setup) except for a couple things:
+
+- [Setting the USB gadget IP address is different](#changing-the-usb-gadget-ip-address)
+- My build scripts automatically expand the root partition on first boot
 
 ### Default Password
 `root` / `milkv`
@@ -84,11 +83,22 @@ The system is set up for USB CDC NCM by default. This is the modern equivalent o
 
 `ssh root@192.168.42.1`
 
-This is the same as the Milk-V default, so you [can use their docs to get set up](https://milkv.io/docs/duo/getting-started/setup)
+This is the same as the Milk-V default, so you [can use their docs to get set up](https://milkv.io/docs/duo/getting-started/setup), [except for changing the USB IP](#changing-the-usb-gadget-ip-address).
 
 You can switch to Host Mode (USB-A) with:
 
 `milkv-usb-mode host` and then reboot. There are systemd services that handle the initialization. If you disable those, use `milkv-usb-init` to set things up after boot.
+
+#### Changing the USB gadget IP address
+
+**Note that these instructions differ from the Milk-V docs**
+
+You can edit `/etc/netplan/90-usb-gadget.yaml` to set the IP. You should keep the `/24` unless you know what you're doing. The USB gadget gets the fist IP (`192.168.42.1`) and each client (so likely just the one host PC) will get the next (`192.168.42.2`).
+
+```yaml
+      addresses:
+        - 192.168.42.1/24
+```
 
 ### WiFi + BT
 
@@ -107,11 +117,81 @@ systemctl disable milkv-bluetooth
 
 Note that since both Bluetooth and Wifi are on the same chip and use the same driver, both will be enabled at the hardware level when either script is enabled. The difference is that the Bluetooth service starts an `hciattach` session as a daemon, the WiFi service does not. Both services will load the necessary modules for either mode. Disable both services (or prevent loading the `aic8800_bsp` driver) to keep the wireless chip powered off.
 
+There are some false alarm errors on boot when using the wireless chip, but they don't affect operation. Here's a normal, working boot log:
+
+```
+[   21.040803] stmmaceth 4070000.ethernet eth0: Failed to restore VLANs
+[  OK  ] Finished Milk-V Duo S USB OTG.
+[   22.026658] mmc1: tuning execution failed: -110
+[   22.026691] mmc1: error -110 whilst initialising SDIO card
+[  OK  ] Started User Login Management.
+[   23.562645] aicbsp: Device init failed, powering down
+[   32.314462] aicbsp: sdio_err:<aicwf_sdio_bus_pwrctl,1498>: bus down
+[   33.042238] ieee80211 phy0:
+[   33.042238] *******************************************************
+[   33.042238] ** CAUTION: USING PERMISSIVE CUSTOM REGULATORY RULES **
+[   33.042238] *******************************************************
+[   35.749812] Bluetooth: hci0: Opcode 0x2003 failed: -110
+```
+
+## Notes
+
+- `/dev/ttyS1` is dedicated to the Bluetooth controller, at least for now. I will see about binding it to ttyS3 so that the other UARTS can take 1 and 2.
+- While USB-C Serial is available, it doesn't initialize until late in the boot process, and does not display the kernel console. You will need to use the UART0 pins and connect to an adapter to troubleshoot boot problems.
+- Board has soft-reset but not soft-poweroff. `systemctl poweroff` will halt the system, but it remains powered as long as it's supplied.
+
+## Building the System
+
+### Basic - Default Settings
+
+`git clone https://github.com/queenkjuul/ubuntu-milkv-duo`
+
+An automatic build process can be initiated with `build.sh`, it will prompt for basic settings (hostname, root password). It will install pre-built packages from my PPA.
+
+### Advanced - Building Yourself
+
+`git clone --recursive https://github.com/queenkjuul/ubuntu-milkv-duo`
+
+Your best bet is a fresh Ubuntu 22.04 VM (the scripts assume you're running 22.04).
+
+You can adjust and rebuild any of the constituent packages. The build script will install any `*.deb` packages within the root directory. So you can go into any submodule (e.g. `milkv-linux`, `milkv-wireless-duos`, etc.) and build a new debian package (I was using `debuild`) which will be installed in the target system. Obviously any pre-built packages you want to include can also be added by just placing them in the project root (`ubuntu-milkv-duo/my-package.deb`) and running the build script.
+
+The setup script must be run as root, because it installs dependencies using `apt`:
+
+`sudo ./setup.sh`
+
+Run the build script with:
+
+`./build.sh`
+
+#### Build Sequence
+
+The `aic8800-modules-*` packages require the relevant kernel headers (`linux-headers-milkv-duos`) to be installed on the build system in order to build. Therefore, it is recommended to build the kernel packages first, then the drivers, then everything else:
+
+1. `debuild -S -sa -us -uc` - builds the source package
+2. `debuild -ariscv64 -b -us -uc` - builds the binary package
+
+(the `-us` and `-uc` and `-sa` options are for disabling signatures - you'd need to omit those flags if you were actually publishing to a PPA)
+
+Following the general order of `kernel -> install generated headers package -> build modules -> build everything else` should get you up and running.
+
+When you run `debuild` within one of the modules, the output will be placed in the repo root directory. When you run `./build.sh`, all `*.deb` files in the root directory will be installed automatically - just make sure all the ones you want are built ahead of time.
+
+#### Customization
+
+Any packages in the repo root (i.e. sitting next to `build.sh`) will be copied into the rootfs and installed.
+
+You can also add packages to the `PACKAGES` list in `second-stage.sh`.
+
+Basic system configuration is handled in `second-stage.sh`
+
+
+===
 [Below this line is old documentation, likely outdated, updates coming]
 ===
 
 ## Credits
-![great friend julie](https://github.com/tvlad1234)
+![great friend julie](https://github.com/tvlad1234) _[different julie :)]_
 ![rootfs guide for risc-v](https://github.com/carlosedp/riscv-bringup/blob/master/Ubuntu-Rootfs-Guide.md)
 ![DO NOT THE CAT!!!](https://github.com/Mnux9)
 
