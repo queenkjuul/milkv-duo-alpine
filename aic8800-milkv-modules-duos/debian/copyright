@@ -1,0 +1,958 @@
+# This file is part of systemd.
+#
+# Data imported from: http://pci-ids.ucw.cz/v2.2/pci.ids
+
+pci:v00000001*
+ ID_VENDOR_FROM_DATABASE=SafeNet (wrong ID)
+
+pci:v00000010*
+ ID_VENDOR_FROM_DATABASE=Allied Telesis, Inc (Wrong ID)
+
+pci:v00000010d00008139*
+ ID_MODEL_FROM_DATABASE=AT-2500TX V3 Ethernet
+
+pci:v00000014*
+ ID_VENDOR_FROM_DATABASE=Loongson Technology LLC
+
+pci:v00000014d00007A00*
+ ID_MODEL_FROM_DATABASE=Hyper Transport Bridge Controller
+
+pci:v00000014d00007A02*
+ ID_MODEL_FROM_DATABASE=APB (Advanced Peripheral Bus) Controller
+
+pci:v00000014d00007A03*
+ ID_MODEL_FROM_DATABASE=Gigabit Ethernet Controller
+
+pci:v00000014d00007A04*
+ ID_MODEL_FROM_DATABASE=OTG USB Controller
+
+pci:v00000014d00007A05*
+ ID_MODEL_FROM_DATABASE=Vivante GPU (Graphics Processing Unit)
+
+pci:v00000014d00007A06*
+ ID_MODEL_FROM_DATABASE=DC (Display Controller)
+
+pci:v00000014d00007A07*
+ ID_MODEL_FROM_DATABASE=HDA (High Definition Audio) Controller
+
+pci:v00000014d00007A08*
+ ID_MODEL_FROM_DATABASE=SATA AHCI Controller
+
+pci:v00000014d00007A09*
+ ID_MODEL_FROM_DATABASE=PCI-to-PCI Bridge
+
+pci:v00000014d00007A0B*
+ ID_MODEL_FROM_DATABASE=SPI Controller
+
+pci:v00000014d00007A0C*
+ ID_MODEL_FROM_DATABASE=LPC Controller
+
+pci:v00000014d00007A0F*
+ ID_MODEL_FROM_DATABASE=DMA (Direct Memory Access) Controller
+
+pci:v00000014d00007A10*
+ ID_MODEL_FROM_DATABASE=Hyper Transport Bridge Controller
+
+pci:v00000014d00007A14*
+ ID_MODEL_FROM_DATABASE=EHCI USB Controller
+
+pci:v00000014d00007A15*
+ ID_MODEL_FROM_DATABASE=Vivante GPU (Graphics Processing Unit)
+
+pci:v00000014d00007A19*
+ ID_MODEL_FROM_DATABASE=PCI-to-PCI Bridge
+
+pci:v00000014d00007A24*
+ ID_MODEL_FROM_DATABASE=OHCI USB Controller
+
+pci:v00000014d00007A29*
+ ID_MODEL_FROM_DATABASE=PCI-to-PCI Bridge
+
+pci:v00000018*
+ ID_VENDOR_FROM_DATABASE=Fn-Link Technology Limited
+
+pci:v00000018d00006252*
+ ID_MODEL_FROM_DATABASE=6252CPUB 802.11ax PCIe Wireless Network Adapter
+
+pci:v0000001C*
+ ID_VENDOR_FROM_DATABASE=PEAK-System Technik GmbH
+
+pci:v0000001Cd00000001*
+ ID_MODEL_FROM_DATABASE=PCAN-PCI CAN-Bus controller
+
+pci:v0000001Cd00000001sv0000001Csd00000004*
+ ID_MODEL_FROM_DATABASE=PCAN-PCI CAN-Bus controller (2 Channel CAN Bus SJC1000)
+
+pci:v0000001Cd00000001sv0000001Csd00000005*
+ ID_MODEL_FROM_DATABASE=PCAN-PCI CAN-Bus controller (2 Channel CAN Bus SJC1000 (Optically Isolated))
+
+pci:v0000003D*
+ ID_VENDOR_FROM_DATABASE=Lockheed Martin-Marietta Corp
+
+pci:v00000059*
+ ID_VENDOR_FROM_DATABASE=Tiger Jet Network Inc. (Wrong ID)
+
+pci:v00000070*
+ ID_VENDOR_FROM_DATABASE=Hauppauge computer works Inc.
+
+pci:v00000070d00007801*
+ ID_MODEL_FROM_DATABASE=WinTV HVR-1800 MCE
+
+pci:v00000071*
+ ID_VENDOR_FROM_DATABASE=Nebula Electronics Ltd.
+
+pci:v00000095*
+ ID_VENDOR_FROM_DATABASE=Silicon Image, Inc. (Wrong ID)
+
+pci:v00000095d00000680*
+ ID_MODEL_FROM_DATABASE=Ultra ATA/133 IDE RAID CONTROLLER CARD
+
+pci:v000000A7*
+ ID_VENDOR_FROM_DATABASE=Teles AG (Wrong ID)
+
+pci:v00000100*
+ ID_VENDOR_FROM_DATABASE=nCipher Security
+
+pci:v00000123*
+ ID_VENDOR_FROM_DATABASE=General Dynamics
+
+pci:v00000128*
+ ID_VENDOR_FROM_DATABASE=Dell (wrong ID)
+
+pci:v0000018A*
+ ID_VENDOR_FROM_DATABASE=LevelOne
+
+pci:v0000018Ad00000106*
+ ID_MODEL_FROM_DATABASE=FPC-0106TX misprogrammed [RTL81xx]
+
+pci:v000001DE*
+ ID_VENDOR_FROM_DATABASE=Oxide Computer Company
+
+pci:v000001DEd00000000*
+ ID_MODEL_FROM_DATABASE=Propolis NVMe Controller
+
+pci:v000001DEd00000001*
+ ID_MODEL_FROM_DATABASE=Propolis xHCI Controller
+
+pci:v000001DEd00000002*
+ ID_MODEL_FROM_DATABASE=Propolis PCI-PCI Bridge
+
+pci:v00000200*
+ ID_VENDOR_FROM_DATABASE=Dell (wrong ID)
+
+pci:v0000021B*
+ ID_VENDOR_FROM_DATABASE=Compaq Computer Corporation
+
+pci:v0000021Bd00008139*
+ ID_MODEL_FROM_DATABASE=HNE-300 (RealTek RTL8139c) [iPaq Networking]
+
+pci:v0000025E*
+ ID_VENDOR_FROM_DATABASE=Solidigm
+
+pci:v0000025Ed00000B60*
+ ID_MODEL_FROM_DATABASE=NVMe DC SSD [Sentinel Rock Plus controller]
+
+pci:v0000025Ed00000B60sv0000025Esd00008208*
+ ID_MODEL_FROM_DATABASE=NVMe DC SSD [Sentinel Rock Plus controller] (NVMe DC SSD U.2 15mm [D7-P5810])
+
+pci:v0000025Ed00000B60sv0000025Esd0000D408*
+ ID_MODEL_FROM_DATABASE=NVMe DC SSD [Sentinel Rock Plus controller] (NVMe DC SSD U.2 15mm [D5-P5430])
+
+pci:v0000025Ed00000B60sv0000025Esd0000D40C*
+ ID_MODEL_FROM_DATABASE=NVMe DC SSD [Sentinel Rock Plus controller] (NVMe DC SSD E1.S 9.5mm [D5-P5430])
+
+pci:v0000025Ed00000B60sv0000025Esd0000D419*
+ ID_MODEL_FROM_DATABASE=NVMe DC SSD [Sentinel Rock Plus controller] (NVMe DC SSD E3.S 7.5mm [D5-P5430])
+
+pci:v0000025Ed00000B60sv0000025Esd0000D808*
+ ID_MODEL_FROM_DATABASE=NVMe DC SSD [Sentinel Rock Plus controller] (NVMe DC SSD U.2 15mm [D5-P5336])
+
+pci:v0000025Ed00000B60sv0000025Esd0000D819*
+ ID_MODEL_FROM_DATABASE=NVMe DC SSD [Sentinel Rock Plus controller] (NVMe DC SSD E3.S 7.5mm [D5-P5336])
+
+pci:v0000025Ed00000B60sv0000025Esd0000D81D*
+ ID_MODEL_FROM_DATABASE=NVMe DC SSD [Sentinel Rock Plus controller] (NVMe DC SSD E1.L 9.5mm [D5-P5336])
+
+pci:v0000025Ed00000B70*
+ ID_MODEL_FROM_DATABASE=NVMe DC SSD [Yorktown controller]
+
+pci:v0000025Ed0000F1AB*
+ ID_MODEL_FROM_DATABASE=P41 Plus NVMe SSD (DRAM-less) [Echo Harbor]
+
+pci:v0000025Ed0000F1AC*
+ ID_MODEL_FROM_DATABASE=P44 Pro NVMe SSD [Hollywood Beach]
+
+pci:v00000270*
+ ID_VENDOR_FROM_DATABASE=Hauppauge computer works Inc. (Wrong ID)
+
+pci:v00000291*
+ ID_VENDOR_FROM_DATABASE=Davicom Semiconductor, Inc. (Wrong ID)
+
+pci:v000002AC*
+ ID_VENDOR_FROM_DATABASE=SpeedStream
+
+pci:v000002ACd00001012*
+ ID_MODEL_FROM_DATABASE=1012 PCMCIA 10/100 Ethernet Card [RTL81xx]
+
+pci:v000002E0*
+ ID_VENDOR_FROM_DATABASE=XFX Pine Group Inc. (Wrong ID)
+
+pci:v00000303*
+ ID_VENDOR_FROM_DATABASE=Hewlett-Packard Company (Wrong ID)
+
+pci:v00000308*
+ ID_VENDOR_FROM_DATABASE=ZyXEL Communications Corporation (Wrong ID)
+
+pci:v00000315*
+ ID_VENDOR_FROM_DATABASE=SK-Electronics Co., Ltd.
+
+pci:v00000357*
+ ID_VENDOR_FROM_DATABASE=TTTech Computertechnik AG (Wrong ID)
+
+pci:v00000357d0000000A*
+ ID_MODEL_FROM_DATABASE=TTP-Monitoring Card V2.0
+
+pci:v00000432*
+ ID_VENDOR_FROM_DATABASE=SCM Microsystems, Inc.
+
+pci:v00000432d00000001*
+ ID_MODEL_FROM_DATABASE=Pluto2 DVB-T Receiver for PCMCIA [EasyWatch MobilSet]
+
+pci:v00000497*
+ ID_VENDOR_FROM_DATABASE=Dell Inc. (wrong ID)
+
+pci:v0000060E*
+ ID_VENDOR_FROM_DATABASE=Lightelligence
+
+pci:v0000060Ed00000001*
+ ID_MODEL_FROM_DATABASE=Hummingbird ES
+
+pci:v00000675*
+ ID_VENDOR_FROM_DATABASE=Dynalink
+
+pci:v00000675d00001700*
+ ID_MODEL_FROM_DATABASE=IS64PH ISDN Adapter
+
+pci:v00000675d00001702*
+ ID_MODEL_FROM_DATABASE=IS64PH ISDN Adapter
+
+pci:v00000675d00001703*
+ ID_MODEL_FROM_DATABASE=ISDN Adapter (PCI Bus, DV, W)
+
+pci:v00000675d00001704*
+ ID_MODEL_FROM_DATABASE=ISDN Adapter (PCI Bus, D, C)
+
+pci:v00000721*
+ ID_VENDOR_FROM_DATABASE=Sapphire, Inc.
+
+pci:v00000731*
+ ID_VENDOR_FROM_DATABASE=Jingjia Microelectronics Co Ltd
+
+pci:v00000731d00007200*
+ ID_MODEL_FROM_DATABASE=JM7200 Series GPU
+
+pci:v00000731d00007200sv00000731sd00007201*
+ ID_MODEL_FROM_DATABASE=JM7200 Series GPU (JM7201)
+
+pci:v00000731d00007200sv00000731sd00007202*
+ ID_MODEL_FROM_DATABASE=JM7200 Series GPU (JM7202)
+
+pci:v00000731d00007200sv00000731sd00007208*
+ ID_MODEL_FROM_DATABASE=JM7200 Series GPU (JM7200)
+
+pci:v00000731d00007200sv00000731sd00007212*
+ ID_MODEL_FROM_DATABASE=JM7200 Series GPU (JM7200)
+
+pci:v00000731d00007200sv00000731sd00007214*
+ ID_MODEL_FROM_DATABASE=JM7200 Series GPU (JM7500)
+
+pci:v00000731d00007200sv00000731sd00007215*
+ ID_MODEL_FROM_DATABASE=JM7200 Series GPU (JM7200)
+
+pci:v00000731d00009100*
+ ID_MODEL_FROM_DATABASE=JM9100
+
+pci:v00000731d00009100sv00000731sd00009101*
+ ID_MODEL_FROM_DATABASE=JM9100
+
+pci:v00000731d00009100sv00000731sd00009102*
+ ID_MODEL_FROM_DATABASE=JM9100 (-I)
+
+pci:v00000731d00009100sv00000731sd00009103*
+ ID_MODEL_FROM_DATABASE=JM9100 (M)
+
+pci:v00000731d0000910A*
+ ID_MODEL_FROM_DATABASE=JH910
+
+pci:v00000731d0000910Asv00000731sd0000910A*
+ ID_MODEL_FROM_DATABASE=JH910
+
+pci:v00000731d0000910Asv00000731sd0000910B*
+ ID_MODEL_FROM_DATABASE=JH910 (-I)
+
+pci:v00000731d0000910Asv00000731sd0000910C*
+ ID_MODEL_FROM_DATABASE=JH910 (-M)
+
+pci:v00000731d00009200*
+ ID_MODEL_FROM_DATABASE=JM9200
+
+pci:v00000731d0000920A*
+ ID_MODEL_FROM_DATABASE=JH920
+
+pci:v00000731d0000920Asv00000731sd0000920A*
+ ID_MODEL_FROM_DATABASE=JH920
+
+pci:v00000731d0000920Asv00000731sd0000920B*
+ ID_MODEL_FROM_DATABASE=JH920 (-I)
+
+pci:v00000731d0000920Asv00000731sd0000920C*
+ ID_MODEL_FROM_DATABASE=JH920 (-M)
+
+pci:v00000731d0000920B*
+ ID_MODEL_FROM_DATABASE=JH920-I
+
+pci:v00000731d0000920C*
+ ID_MODEL_FROM_DATABASE=JH920-M
+
+pci:v00000731d00009210*
+ ID_MODEL_FROM_DATABASE=JM9210
+
+pci:v00000731d00009210sv00000731sd00009210*
+ ID_MODEL_FROM_DATABASE=JM9210
+
+pci:v00000731d00009210sv00000731sd00009211*
+ ID_MODEL_FROM_DATABASE=JM9210 (-I)
+
+pci:v00000731d00009211*
+ ID_MODEL_FROM_DATABASE=JM9210-I
+
+pci:v00000731d00009230*
+ ID_MODEL_FROM_DATABASE=JM9230
+
+pci:v00000731d00009230sv00000731sd00009230*
+ ID_MODEL_FROM_DATABASE=JM9230
+
+pci:v00000731d00009230sv00000731sd00009231*
+ ID_MODEL_FROM_DATABASE=JM9230 (-I)
+
+pci:v00000731d00009231*
+ ID_MODEL_FROM_DATABASE=JM9231-I
+
+pci:v00000731d00009250*
+ ID_MODEL_FROM_DATABASE=JM9250
+
+pci:v00000731d00009250sv00000731sd00009250*
+ ID_MODEL_FROM_DATABASE=JM9250
+
+pci:v00000731d0000930A*
+ ID_MODEL_FROM_DATABASE=JH930-I
+
+pci:v00000731d0000930Asv00000731sd0000930A*
+ ID_MODEL_FROM_DATABASE=JH930-I
+
+pci:v00000731d0000930Asv00000731sd0000930B*
+ ID_MODEL_FROM_DATABASE=JH930-I (JH930-M)
+
+pci:v00000731d0000930Asv00000731sd0000930C*
+ ID_MODEL_FROM_DATABASE=JH930-I (JH930)
+
+pci:v00000731d0000930B*
+ ID_MODEL_FROM_DATABASE=JH930-M
+
+pci:v00000777*
+ ID_VENDOR_FROM_DATABASE=Ubiquiti Networks, Inc.
+
+pci:v00000795*
+ ID_VENDOR_FROM_DATABASE=Wired Inc.
+
+pci:v00000795d00006663*
+ ID_MODEL_FROM_DATABASE=Butane II (MPEG2 encoder board)
+
+pci:v00000795d00006666*
+ ID_MODEL_FROM_DATABASE=MediaPress (MPEG2 encoder board)
+
+pci:v000007D1*
+ ID_VENDOR_FROM_DATABASE=D-Link System Inc
+
+pci:v00000824*
+ ID_VENDOR_FROM_DATABASE=T1042 [Freescale]
+
+pci:v00000925*
+ ID_VENDOR_FROM_DATABASE=VIA Technologies, Inc. (Wrong ID)
+
+pci:v00000A89*
+ ID_VENDOR_FROM_DATABASE=BREA Technologies Inc
+
+pci:v00000B0B*
+ ID_VENDOR_FROM_DATABASE=Rhino Equipment Corp.
+
+pci:v00000B0Bd00000105*
+ ID_MODEL_FROM_DATABASE=R1T1
+
+pci:v00000B0Bd00000205*
+ ID_MODEL_FROM_DATABASE=R4FXO
+
+pci:v00000B0Bd00000206*
+ ID_MODEL_FROM_DATABASE=RCB4FXO 4-channel FXO analog telephony card
+
+pci:v00000B0Bd00000305*
+ ID_MODEL_FROM_DATABASE=R4T1
+
+pci:v00000B0Bd00000405*
+ ID_MODEL_FROM_DATABASE=R8FXX
+
+pci:v00000B0Bd00000406*
+ ID_MODEL_FROM_DATABASE=RCB8FXX 8-channel modular analog telephony card
+
+pci:v00000B0Bd00000505*
+ ID_MODEL_FROM_DATABASE=R24FXX
+
+pci:v00000B0Bd00000506*
+ ID_MODEL_FROM_DATABASE=RCB24FXS 24-Channel FXS analog telephony card
+
+pci:v00000B0Bd00000605*
+ ID_MODEL_FROM_DATABASE=R2T1
+
+pci:v00000B0Bd00000705*
+ ID_MODEL_FROM_DATABASE=R24FXS
+
+pci:v00000B0Bd00000706*
+ ID_MODEL_FROM_DATABASE=RCB24FXO 24-Channel FXO analog telephony card
+
+pci:v00000B0Bd00000905*
+ ID_MODEL_FROM_DATABASE=R1T3 Single T3 Digital Telephony Card
+
+pci:v00000B0Bd00000906*
+ ID_MODEL_FROM_DATABASE=RCB24FXX 24-channel modular analog telephony card
+
+pci:v00000B0Bd00000A06*
+ ID_MODEL_FROM_DATABASE=RCB672FXX 672-channel modular analog telephony card
+
+pci:v00000BAE*
+ ID_VENDOR_FROM_DATABASE=Bachmann electronic GmbH
+
+pci:v00000CCD*
+ ID_VENDOR_FROM_DATABASE=Preferred Networks, Inc.
+
+pci:v00000E11*
+ ID_VENDOR_FROM_DATABASE=Compaq Computer Corporation
+
+pci:v00000E11d00000001*
+ ID_MODEL_FROM_DATABASE=PCI to EISA Bridge
+
+pci:v00000E11d00000002*
+ ID_MODEL_FROM_DATABASE=PCI to ISA Bridge
+
+pci:v00000E11d00000046*
+ ID_MODEL_FROM_DATABASE=Smart Array 64xx
+
+pci:v00000E11d00000046sv00000E11sd00004091*
+ ID_MODEL_FROM_DATABASE=Smart Array 64xx (Smart Array 6i)
+
+pci:v00000E11d00000046sv00000E11sd0000409A*
+ ID_MODEL_FROM_DATABASE=Smart Array 64xx (Smart Array 641)
+
+pci:v00000E11d00000046sv00000E11sd0000409B*
+ ID_MODEL_FROM_DATABASE=Smart Array 64xx (Smart Array 642)
+
+pci:v00000E11d00000046sv00000E11sd0000409C*
+ ID_MODEL_FROM_DATABASE=Smart Array 64xx (Smart Array 6400)
+
+pci:v00000E11d00000046sv00000E11sd0000409D*
+ ID_MODEL_FROM_DATABASE=Smart Array 64xx (Smart Array 6400 EM)
+
+pci:v00000E11d00000049*
+ ID_MODEL_FROM_DATABASE=NC7132 Gigabit Upgrade Module
+
+pci:v00000E11d0000004A*
+ ID_MODEL_FROM_DATABASE=NC6136 Gigabit Server Adapter
+
+pci:v00000E11d0000005A*
+ ID_MODEL_FROM_DATABASE=Remote Insight II board - Lights-Out
+
+pci:v00000E11d0000007C*
+ ID_MODEL_FROM_DATABASE=NC7770 1000BaseTX
+
+pci:v00000E11d0000007D*
+ ID_MODEL_FROM_DATABASE=NC6770 1000BaseTX
+
+pci:v00000E11d00000085*
+ ID_MODEL_FROM_DATABASE=NC7780 1000BaseTX
+
+pci:v00000E11d000000B1*
+ ID_MODEL_FROM_DATABASE=Remote Insight II board - PCI device
+
+pci:v00000E11d000000BB*
+ ID_MODEL_FROM_DATABASE=NC7760
+
+pci:v00000E11d000000CA*
+ ID_MODEL_FROM_DATABASE=NC7771
+
+pci:v00000E11d000000CB*
+ ID_MODEL_FROM_DATABASE=NC7781
+
+pci:v00000E11d000000CF*
+ ID_MODEL_FROM_DATABASE=NC7772
+
+pci:v00000E11d000000D0*
+ ID_MODEL_FROM_DATABASE=NC7782
+
+pci:v00000E11d000000D1*
+ ID_MODEL_FROM_DATABASE=NC7783
+
+pci:v00000E11d000000E3*
+ ID_MODEL_FROM_DATABASE=NC7761
+
+pci:v00000E11d00000508*
+ ID_MODEL_FROM_DATABASE=Netelligent 4/16 Token Ring
+
+pci:v00000E11d00001000*
+ ID_MODEL_FROM_DATABASE=Triflex/Pentium Bridge, Model 1000
+
+pci:v00000E11d00002000*
+ ID_MODEL_FROM_DATABASE=Triflex/Pentium Bridge, Model 2000
+
+pci:v00000E11d00003032*
+ ID_MODEL_FROM_DATABASE=QVision 1280/p
+
+pci:v00000E11d00003033*
+ ID_MODEL_FROM_DATABASE=QVision 1280/p
+
+pci:v00000E11d00003034*
+ ID_MODEL_FROM_DATABASE=QVision 1280/p
+
+pci:v00000E11d00004000*
+ ID_MODEL_FROM_DATABASE=4000 [Triflex]
+
+pci:v00000E11d00004040*
+ ID_MODEL_FROM_DATABASE=Integrated Array
+
+pci:v00000E11d00004048*
+ ID_MODEL_FROM_DATABASE=Compaq Raid LC2
+
+pci:v00000E11d00004050*
+ ID_MODEL_FROM_DATABASE=Smart Array 4200
+
+pci:v00000E11d00004051*
+ ID_MODEL_FROM_DATABASE=Smart Array 4250ES
+
+pci:v00000E11d00004058*
+ ID_MODEL_FROM_DATABASE=Smart Array 431
+
+pci:v00000E11d00004070*
+ ID_MODEL_FROM_DATABASE=Smart Array 5300
+
+pci:v00000E11d00004080*
+ ID_MODEL_FROM_DATABASE=Smart Array 5i
+
+pci:v00000E11d00004082*
+ ID_MODEL_FROM_DATABASE=Smart Array 532
+
+pci:v00000E11d00004083*
+ ID_MODEL_FROM_DATABASE=Smart Array 5312
+
+pci:v00000E11d00004091*
+ ID_MODEL_FROM_DATABASE=Smart Array 6i
+
+pci:v00000E11d0000409A*
+ ID_MODEL_FROM_DATABASE=Smart Array 641
+
+pci:v00000E11d0000409B*
+ ID_MODEL_FROM_DATABASE=Smart Array 642
+
+pci:v00000E11d0000409C*
+ ID_MODEL_FROM_DATABASE=Smart Array 6400
+
+pci:v00000E11d0000409D*
+ ID_MODEL_FROM_DATABASE=Smart Array 6400 EM
+
+pci:v00000E11d00006010*
+ ID_MODEL_FROM_DATABASE=HotPlug PCI Bridge 6010
+
+pci:v00000E11d00007020*
+ ID_MODEL_FROM_DATABASE=USB Controller
+
+pci:v00000E11d0000A0EC*
+ ID_MODEL_FROM_DATABASE=Fibre Channel Host Controller
+
+pci:v00000E11d0000A0F0*
+ ID_MODEL_FROM_DATABASE=Advanced System Management Controller
+
+pci:v00000E11d0000A0F0sv00000E11sd0000B0F3*
+ ID_MODEL_FROM_DATABASE=Advanced System Management Controller (ProLiant DL360)
+
+pci:v00000E11d0000A0F3*
+ ID_MODEL_FROM_DATABASE=Triflex PCI to ISA Bridge
+
+pci:v00000E11d0000A0F7*
+ ID_MODEL_FROM_DATABASE=PCI Hotplug Controller
+
+pci:v00000E11d0000A0F7sv00008086sd0000002A*
+ ID_MODEL_FROM_DATABASE=PCI Hotplug Controller (A)
+
+pci:v00000E11d0000A0F7sv00008086sd0000002B*
+ ID_MODEL_FROM_DATABASE=PCI Hotplug Controller (B)
+
+pci:v00000E11d0000A0F8*
+ ID_MODEL_FROM_DATABASE=ZFMicro Chipset USB
+
+pci:v00000E11d0000A0FC*
+ ID_MODEL_FROM_DATABASE=FibreChannel HBA Tachyon
+
+pci:v00000E11d0000AE10*
+ ID_MODEL_FROM_DATABASE=Smart-2/P RAID Controller
+
+pci:v00000E11d0000AE10sv00000E11sd00004030*
+ ID_MODEL_FROM_DATABASE=Smart-2/P RAID Controller (Smart-2/P Array Controller)
+
+pci:v00000E11d0000AE10sv00000E11sd00004031*
+ ID_MODEL_FROM_DATABASE=Smart-2/P RAID Controller (Smart-2SL Array Controller)
+
+pci:v00000E11d0000AE10sv00000E11sd00004032*
+ ID_MODEL_FROM_DATABASE=Smart-2/P RAID Controller (Smart Array 3200 Controller)
+
+pci:v00000E11d0000AE10sv00000E11sd00004033*
+ ID_MODEL_FROM_DATABASE=Smart-2/P RAID Controller (Smart Array 3100ES Controller)
+
+pci:v00000E11d0000AE10sv00000E11sd00004034*
+ ID_MODEL_FROM_DATABASE=Smart-2/P RAID Controller (Smart Array 221 Controller)
+
+pci:v00000E11d0000AE29*
+ ID_MODEL_FROM_DATABASE=MIS-L
+
+pci:v00000E11d0000AE2A*
+ ID_MODEL_FROM_DATABASE=MPC
+
+pci:v00000E11d0000AE2B*
+ ID_MODEL_FROM_DATABASE=MIS-E
+
+pci:v00000E11d0000AE31*
+ ID_MODEL_FROM_DATABASE=System Management Controller
+
+pci:v00000E11d0000AE32*
+ ID_MODEL_FROM_DATABASE=Netelligent 10/100 TX PCI UTP
+
+pci:v00000E11d0000AE33*
+ ID_MODEL_FROM_DATABASE=Triflex Dual EIDE Controller
+
+pci:v00000E11d0000AE34*
+ ID_MODEL_FROM_DATABASE=Netelligent 10 T PCI UTP
+
+pci:v00000E11d0000AE35*
+ ID_MODEL_FROM_DATABASE=Integrated NetFlex-3/P
+
+pci:v00000E11d0000AE40*
+ ID_MODEL_FROM_DATABASE=Netelligent Dual 10/100 TX PCI UTP
+
+pci:v00000E11d0000AE43*
+ ID_MODEL_FROM_DATABASE=Netelligent Integrated 10/100 TX UTP
+
+pci:v00000E11d0000AE69*
+ ID_MODEL_FROM_DATABASE=CETUS-L
+
+pci:v00000E11d0000AE6C*
+ ID_MODEL_FROM_DATABASE=Northstar
+
+pci:v00000E11d0000AE6D*
+ ID_MODEL_FROM_DATABASE=NorthStar CPU to PCI Bridge
+
+pci:v00000E11d0000B011*
+ ID_MODEL_FROM_DATABASE=Netelligent 10/100 TX Embedded UTP
+
+pci:v00000E11d0000B012*
+ ID_MODEL_FROM_DATABASE=Netelligent 10 T/2 PCI UTP/Coax
+
+pci:v00000E11d0000B01E*
+ ID_MODEL_FROM_DATABASE=NC3120 Fast Ethernet NIC
+
+pci:v00000E11d0000B01F*
+ ID_MODEL_FROM_DATABASE=NC3122 Fast Ethernet NIC
+
+pci:v00000E11d0000B02F*
+ ID_MODEL_FROM_DATABASE=NC1120 Ethernet NIC
+
+pci:v00000E11d0000B030*
+ ID_MODEL_FROM_DATABASE=Netelligent 10/100 TX UTP
+
+pci:v00000E11d0000B04A*
+ ID_MODEL_FROM_DATABASE=10/100 TX PCI Intel WOL UTP Controller
+
+pci:v00000E11d0000B060*
+ ID_MODEL_FROM_DATABASE=Smart Array 5300 Controller
+
+pci:v00000E11d0000B0C6*
+ ID_MODEL_FROM_DATABASE=NC3161 Fast Ethernet NIC
+
+pci:v00000E11d0000B0C7*
+ ID_MODEL_FROM_DATABASE=NC3160 Fast Ethernet NIC
+
+pci:v00000E11d0000B0D7*
+ ID_MODEL_FROM_DATABASE=NC3121 Fast Ethernet NIC
+
+pci:v00000E11d0000B0DD*
+ ID_MODEL_FROM_DATABASE=NC3131 Fast Ethernet NIC
+
+pci:v00000E11d0000B0DE*
+ ID_MODEL_FROM_DATABASE=NC3132 Fast Ethernet Module
+
+pci:v00000E11d0000B0DF*
+ ID_MODEL_FROM_DATABASE=NC6132 Gigabit Module
+
+pci:v00000E11d0000B0E0*
+ ID_MODEL_FROM_DATABASE=NC6133 Gigabit Module
+
+pci:v00000E11d0000B0E1*
+ ID_MODEL_FROM_DATABASE=NC3133 Fast Ethernet Module
+
+pci:v00000E11d0000B123*
+ ID_MODEL_FROM_DATABASE=NC6134 Gigabit NIC
+
+pci:v00000E11d0000B134*
+ ID_MODEL_FROM_DATABASE=NC3163 Fast Ethernet NIC
+
+pci:v00000E11d0000B13C*
+ ID_MODEL_FROM_DATABASE=NC3162 Fast Ethernet NIC
+
+pci:v00000E11d0000B144*
+ ID_MODEL_FROM_DATABASE=NC3123 Fast Ethernet NIC
+
+pci:v00000E11d0000B163*
+ ID_MODEL_FROM_DATABASE=NC3134 Fast Ethernet NIC
+
+pci:v00000E11d0000B164*
+ ID_MODEL_FROM_DATABASE=NC3165 Fast Ethernet Upgrade Module
+
+pci:v00000E11d0000B178*
+ ID_MODEL_FROM_DATABASE=Smart Array 5i/532
+
+pci:v00000E11d0000B178sv00000E11sd00004080*
+ ID_MODEL_FROM_DATABASE=Smart Array 5i/532 (Smart Array 5i)
+
+pci:v00000E11d0000B178sv00000E11sd00004082*
+ ID_MODEL_FROM_DATABASE=Smart Array 5i/532 (Smart Array 532)
+
+pci:v00000E11d0000B178sv00000E11sd00004083*
+ ID_MODEL_FROM_DATABASE=Smart Array 5i/532 (Smart Array 5312)
+
+pci:v00000E11d0000B1A4*
+ ID_MODEL_FROM_DATABASE=NC7131 Gigabit Server Adapter
+
+pci:v00000E11d0000B200*
+ ID_MODEL_FROM_DATABASE=Memory Hot-Plug Controller
+
+pci:v00000E11d0000B203*
+ ID_MODEL_FROM_DATABASE=Integrated Lights Out Controller
+
+pci:v00000E11d0000B203sv0000103Csd00003305*
+ ID_MODEL_FROM_DATABASE=Integrated Lights Out Controller (iLO2)
+
+pci:v00000E11d0000B204*
+ ID_MODEL_FROM_DATABASE=Integrated Lights Out  Processor
+
+pci:v00000E11d0000B204sv0000103Csd00003305*
+ ID_MODEL_FROM_DATABASE=Integrated Lights Out  Processor (iLO2)
+
+pci:v00000E11d0000C000*
+ ID_MODEL_FROM_DATABASE=Remote Insight Lights-Out Edition
+
+pci:v00000E11d0000F130*
+ ID_MODEL_FROM_DATABASE=NetFlex-3/P ThunderLAN 1.0
+
+pci:v00000E11d0000F150*
+ ID_MODEL_FROM_DATABASE=NetFlex-3/P ThunderLAN 2.3
+
+pci:v00000E55*
+ ID_VENDOR_FROM_DATABASE=HaSoTec GmbH
+
+pci:v00000EAC*
+ ID_VENDOR_FROM_DATABASE=SHF Communication Technologies AG
+
+pci:v00000EACd00000008*
+ ID_MODEL_FROM_DATABASE=Ethernet Powerlink Managing Node 01
+
+pci:v00000F62*
+ ID_VENDOR_FROM_DATABASE=Acrox Technologies Co., Ltd.
+
+pci:v00001000*
+ ID_VENDOR_FROM_DATABASE=Broadcom / LSI
+
+pci:v00001000d00000001*
+ ID_MODEL_FROM_DATABASE=53c810
+
+pci:v00001000d00000001sv00001000sd00001000*
+ ID_MODEL_FROM_DATABASE=53c810 (LSI53C810AE PCI to SCSI I/O Processor)
+
+pci:v00001000d00000002*
+ ID_MODEL_FROM_DATABASE=53c820
+
+pci:v00001000d00000003*
+ ID_MODEL_FROM_DATABASE=53c825
+
+pci:v00001000d00000003sv00001000sd00001000*
+ ID_MODEL_FROM_DATABASE=53c825 (LSI53C825AE PCI to SCSI I/O Processor (Ultra Wide))
+
+pci:v00001000d00000004*
+ ID_MODEL_FROM_DATABASE=53c815
+
+pci:v00001000d00000005*
+ ID_MODEL_FROM_DATABASE=53c810AP
+
+pci:v00001000d00000006*
+ ID_MODEL_FROM_DATABASE=53c860
+
+pci:v00001000d00000006sv00001000sd00001000*
+ ID_MODEL_FROM_DATABASE=53c860 (LSI53C860E PCI to Ultra SCSI I/O Processor)
+
+pci:v00001000d0000000A*
+ ID_MODEL_FROM_DATABASE=53c1510
+
+pci:v00001000d0000000Asv00000E11sd0000B143*
+ ID_MODEL_FROM_DATABASE=53c1510 (Integrated Dual Channel Wide Ultra2 SCSI Controller)
+
+pci:v00001000d0000000Asv00001000sd00001000*
+ ID_MODEL_FROM_DATABASE=53c1510 (LSI53C1510 PCI to Dual Channel Wide Ultra2 SCSI Controller (Nonintelligent mode))
+
+pci:v00001000d0000000B*
+ ID_MODEL_FROM_DATABASE=53C896/897
+
+pci:v00001000d0000000Bsv00000E11sd00006004*
+ ID_MODEL_FROM_DATABASE=53C896/897 (EOB003 Series SCSI host adapter)
+
+pci:v00001000d0000000Bsv00001000sd00001000*
+ ID_MODEL_FROM_DATABASE=53C896/897 (LSI53C896/7 PCI to Dual Channel Ultra2 SCSI Multifunction Controller)
+
+pci:v00001000d0000000Bsv00001000sd00001010*
+ ID_MODEL_FROM_DATABASE=53C896/897 (LSI22910 PCI to Dual ChFormat: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: aic8800-milkv-modules-duos
+Upstream-Contact: https://github.com/milkv-duo/duo-buildroot-sdk-v2
+Source: <https://github.com/queenkjuul/aic8800-milkv-duos>
+
+Files: 
+  aicsemi/aic8800/aic8800_bsp/aic_bsp_driver.c
+  aicsemi/aic8800/aic8800_bsp/aic_bsp_driver.h
+  aicsemi/aic8800/aic8800_fdrv/aic8800_fdrv.o
+  aicsemi/aic8800/aic8800_fdrv/hal_desc.h
+  aicsemi/aic8800/aic8800_fdrv/ipc_compat.h
+  aicsemi/aic8800/aic8800_fdrv/ipc_host.c
+  aicsemi/aic8800/aic8800_fdrv/ipc_host.h
+  aicsemi/aic8800/aic8800_fdrv/ipc_shared.h
+  aicsemi/aic8800/aic8800_fdrv/lmac_mac.h
+  aicsemi/aic8800/aic8800_fdrv/lmac_msg.h
+  aicsemi/aic8800/aic8800_fdrv/lmac_types.h
+  aicsemi/aic8800/aic8800_fdrv/reg_access.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_bfmer.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_bfmer.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_cfgfile.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_cfgfile.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_cmds.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_cmds.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_compat.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_debugfs.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_debugfs.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_defs.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_dini.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_dini.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_events.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_fw_trace.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_fw_trace.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_irqs.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_irqs.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_main.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_main.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_main.o
+  aicsemi/aic8800/aic8800_fdrv/rwnx_mesh.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_mesh.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_mod_params.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_mod_params.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_msg_rx.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_msg_rx.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_msg_tx.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_msg_tx.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_mu_group.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_mu_group.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_pci.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_pci.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_platform.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_platform.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_prof.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_radar.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_radar.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_rx.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_rx.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_strs.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_strs.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_tdls.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_tdls.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_testmode.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_testmode.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_tx.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_tx.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_txq.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_txq.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_utils.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_utils.h
+  aicsemi/aic8800/aic8800_fdrv/rwnx_v7.c
+  aicsemi/aic8800/aic8800_fdrv/rwnx_v7.h
+Copyright: 2012-2021 RivieraWaves
+License: GPL-2.0
+
+Files:
+  aicsemi/aic8800/aic8800_bsp/aic8800_bsp.o
+  aicsemi/aic8800/aic8800_bsp/aic_bsp_main.c
+  aicsemi/aic8800/aic8800_bsp/aic_bsp_main.o
+  aicsemi/aic8800/aic8800_bsp/aicsdio.c
+  aicsemi/aic8800/aic8800_bsp/aicsdio.h
+  aicsemi/aic8800/aic8800_bsp/aicsdio_txrxif.c
+  aicsemi/aic8800/aic8800_bsp/aicsdio_txrxif.h
+  aicsemi/aic8800/aic8800_btlpm/aic8800_btlpm.o
+  aicsemi/aic8800/aic8800_btlpm/aic_bluetooth_main.c
+  aicsemi/aic8800/aic8800_btlpm/aic_bluetooth_main.o
+  aicsemi/aic8800/aic8800_fdrv/aicwf_sdio.c
+  aicsemi/aic8800/aic8800_fdrv/aicwf_sdio.h
+  aicsemi/aic8800/aic8800_fdrv/aicwf_txrxif.c
+  aicsemi/aic8800/aic8800_fdrv/aicwf_txrxif.h
+  aicsemi/aic8800/aic8800_fdrv/aicwf_usb.c
+  aicsemi/aic8800/aic8800_fdrv/aicwf_usb.h
+  aicsemi/aic8800/aic8800_fdrv/sdio_host.c
+  aicsemi/aic8800/aic8800_fdrv/sdio_host.h
+  aicsemi/aic8800/aic8800_fdrv/usb_host.c
+  aicsemi/aic8800/aic8800_fdrv/usb_host.h
+Copyright: 2015-2020 AICSemi
+License: GPL-2.0
+
+Files:
+  aicsemi/aic8800/aic8800_fdrv/aic_br_ext.c
+  aicsemi/aic8800/aic8800_fdrv/aic_br_ext.h
+Copyright: 2007-2017 Realtek Corporation
+License: GPL-2.0
+
+Files: 
+  aicsemi/aic8800/aic8800_btlpm/lpm.h
+Copyright: 2015 Spreadtrum Communications Inc.
+License: GPL-2.0
+
+Files: *
+Copyright: Unknown Author (presumed to be Milk-V/Sophgo/Cvitek)
+License: GPL-2.0
+
+Files: 
+  debian/*
+  aic8800-milkv-duos/README.md
+Copyright: 2026 Julie Hill <queenkjuul@pm.me>
+License: GPL-2.0
+
+License: GPL-2.0
+ This package is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License version 2 as published by
+ the Free Software Foundation.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <https://www.gnu.org/licenses/>
+ .
+ On Debian systems, the complete text of the GNU General
+ Public License version 2 can be found in "/usr/share/common-licenses/GPL-2".

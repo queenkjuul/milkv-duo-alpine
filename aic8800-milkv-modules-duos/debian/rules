@@ -1,0 +1,38 @@
+#!/usr/bin/make -f
+
+DEB_VER := $(shell dpkg-query -W linux-headers-milkv-duos | cut -f 2)
+export KERNELRELEASE := $(shell echo $(DEB_VER) | \
+									sed 's/~/-/g' | \
+									sed 's/+/-/g')
+export HEADERS = /lib/modules/$(KERNELRELEASE)/build
+export BUILD_DIR = aic8800-milkv-duos/aicsemi/aic8800/
+
+%:
+	dh $@
+
+
+override_dh_auto_build:
+	$(MAKE) ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- -C $(HEADERS) M=$(CURDIR)/$(BUILD_DIR) KERNELRELEASE=$(KERNELRELEASE) modules
+
+override_dh_auto_install:
+	mkdir -p debian/aic8800-milkv-modules-duos/lib/modules/$(KERNELRELEASE)/kernel/drivers/net/wireless/aic8800
+	find $(CURDIR)/$(BUILD_DIR) -name "*.ko" -exec cp {} debian/aic8800-milkv-modules-duos/lib/modules/$(KERNELRELEASE)/kernel/drivers/net/wireless/aic8800/ \;
+
+override_dh_installdeb:
+	dh_installdeb
+	sed -i "s/@KVER@/$(KERNELRELEASE)/g" $(CURDIR)/debian/aic8800-milkv-modules-duos/DEBIAN/postinst
+
+clean:
+	dh_clean
+	rm -rf debian/aic8800-milkv-modules-duos || true
+	rm -rf debian/.debhelper || true
+	rm debian/*debhelper* || true
+	rm debian/*substvars || true
+	rm debian/files || true
+	find $(CURDIR) -type f \( \
+			-name "*.o" -o \
+			-name "*.ko" -o \
+			-name ".*.cmd" -o \
+			-name "*.mod.c" -o \
+			-name ".module-common.o" \
+		\) -delete

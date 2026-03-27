@@ -1,0 +1,11 @@
+aic8800-milkv-modules-duos (0.0.1+7.0~rc5) jammy; urgency=medium
+
+  * Rebase to Linux 7.0-rc5
+
+ -- Julie Hill <queenkjuul@pm.me>  Tue, 24 Mar 2026 10:11:05 +0000
+
+aic8800-milkv-modules-duos (0.0.1+7.0~rc4) jammy; urgency=medium
+
+  * Initial Release.
+
+ -- Julie Hill <queenkjuul@pm.me>  Mon, 16 Mar 2026 06:37:01 +0000

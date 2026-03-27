@@ -1,0 +1,16 @@
+Source: aic8800-milkv-modules-duos
+Section: kernel
+Priority: optional
+Maintainer: Julie Hill <queenkjuul@pm.me>
+Build-Depends: debhelper-compat (= 13), linux-headers-milkv-duos:riscv64
+Standards-Version: 4.6.0
+Homepage: https://github.com/queenkjuul/aic8800-milkv-duos
+Rules-Requires-Root: no
+
+Package: aic8800-milkv-modules-duos
+Architecture: riscv64
+Multi-Arch: foreign
+Depends: ${shlibs:Depends}, ${misc:Depends}, aic8800-milkv-firmware, linux-image-milkv-duos
+Description: Milk-V Duo S AIC8800 WiFi+BT drivers
+ Vendor-provided AIC8800 drivers from the milkv-buildroot-duo repository,
+ modified for use with the Milk-V Duo S on modern kernels.
