@@ -1,8 +1,11 @@
 #!/bin/sh
 set -e
 if [ "$1" = "configure" ]; then
+    if [ -e /etc/default/u-boot ]; then
+        sed -i 's/^#U_BOOT_ROOT.*/U_BOOT_ROOT=\\${root}/' /etc/default/u-boot
+        sed -i 's/^#U_BOOT_TIMEOUT.*/U_BOOT_TIMEOUT="20"/' /etc/default/u-boot
+    fi
     u-boot-update
-    # it sucks, but there's like, no possible way to determine 
-    # KVER at postinst runtime
+    # @KVER@ gets replaced with kernel version at build time
     depmod -a @KVER@
 fi

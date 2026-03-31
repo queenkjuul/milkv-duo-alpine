@@ -1,7 +1,7 @@
-From 996872821a8e2e506c8c49d303bf265b221b59ad Mon Sep 17 00:00:00 2001
+From e5907fc0fdda7ae63de4bc07fea0118f693ffda8 Mon Sep 17 00:00:00 2001
 From: queenkjuul <queenkjuul@pm.me>
 Date: Thu, 12 Mar 2026 05:51:30 +0000
-Subject: [PATCH 15/20] riscv64: dts: sophgo: add watchdog timer node for
+Subject: [PATCH 16/21] riscv64: dts: sophgo: add watchdog timer node for
  Sophgo cv180x
 
 ---

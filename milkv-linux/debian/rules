@@ -24,8 +24,10 @@ override_dh_auto_build:
 override_dh_auto_install:
 	mkdir -p debian/linux-image-milkv-duos/boot
 	install -m 644 linux/arch/riscv/boot/Image debian/linux-image-milkv-duos/boot/vmlinuz-$(KERNELRELEASE)
+	mkimage -f milkv-duos.its debian/linux-image-milkv-duos/boot/boot.sd-$(KERNELRELEASE)
 
-	cp linux/arch/riscv/boot/dts/sophgo/sg2000-milkv-duo-s.dtb debian/linux-image-milkv-duos/boot/
+	mkdir -p debian/linux-image-milkv-duos/lib/firmware/$(KERNELRELEASE)
+	cp linux/arch/riscv/boot/dts/sophgo/sg2000-milkv-duo-s.dtb debian/linux-image-milkv-duos/lib/firmware/$(KERNELRELEASE)/sg2000_milkv_duos_musl_riscv64_sd.dtb
 
 	$(MAKE) -C $(SRC) LOCALVERSION="" KERNELRELEASE=$(KERNELRELEASE) INSTALL_MOD_PATH=$(INSTALL_MOD_PATH) modules_install
 	rm -f $(CURDIR)/debian/linux-image-milkv-duos/lib/modules/$(KERNELRELEASE)/build
@@ -41,8 +43,7 @@ override_dh_auto_install:
 	$(INSTALL_HDR_PATH)
 
 	cd $(CURDIR)
-	pwd
-	
+
 	mkdir -p $(CURDIR)/debian/linux-headers-milkv-duos/lib/modules/$(KERNELRELEASE)
 	ln -sf /usr/src/linux-headers-$(KERNELRELEASE) $(CURDIR)/debian/linux-headers-milkv-duos/lib/modules/$(KERNELRELEASE)/build
 

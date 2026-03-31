@@ -1,23 +1,23 @@
-From 65c0e86eed89168afe024a6f2f17040e05a50930 Mon Sep 17 00:00:00 2001
+From 42ab4600c0fd223f4e8aefcf1ef1d06205c17df7 Mon Sep 17 00:00:00 2001
 From: queenkjuul <queenkjuul@pm.me>
-Date: Wed, 11 Mar 2026 22:08:39 +0000
-Subject: [PATCH 14/20] riscv64: dts: sophgo: enable USB OTG for Milk-V Duo S
- (Sophgo SG2000)
+Date: Thu, 12 Mar 2026 05:52:00 +0000
+Subject: [PATCH 17/21] riscv64: dts: sophgo: enable cv180x watchdog timer for
+ sg2000-milkv-duo-s
 
 ---
  arch/riscv/boot/dts/sophgo/sg2000-milkv-duo-s.dts | 4 ++++
  1 file changed, 4 insertions(+)
 
 diff --git a/arch/riscv/boot/dts/sophgo/sg2000-milkv-duo-s.dts b/arch/riscv/boot/dts/sophgo/sg2000-milkv-duo-s.dts
-index 174c194e1301..bfdc41cb54b3 100644
+index 641732a6d938..713154e75e21 100644
 --- a/arch/riscv/boot/dts/sophgo/sg2000-milkv-duo-s.dts
 +++ b/arch/riscv/boot/dts/sophgo/sg2000-milkv-duo-s.dts
-@@ -78,3 +78,7 @@ &uart0 {
+@@ -87,3 +87,7 @@ &usb {
+ 	dr_mode = "otg";
  	status = "okay";
  };
- 
-+&usb {
-+	dr_mode = "otg";
++
++&wdt {
 +	status = "okay";
 +};
 -- 

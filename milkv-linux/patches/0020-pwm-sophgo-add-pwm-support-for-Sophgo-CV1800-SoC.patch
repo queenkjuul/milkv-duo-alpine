@@ -1,7 +1,7 @@
-From 017f825b2260aa787c8b13d608819decce825604 Mon Sep 17 00:00:00 2001
+From 171fb34c41454d677de0313269b640ba62a6d7a3 Mon Sep 17 00:00:00 2001
 From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
 Date: Fri, 9 May 2025 11:45:44 +0200
-Subject: [PATCH 19/20] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
+Subject: [PATCH 20/21] pwm: sophgo: add pwm support for Sophgo CV1800 SoC
 
 Implement the PWM driver for CV1800.
 

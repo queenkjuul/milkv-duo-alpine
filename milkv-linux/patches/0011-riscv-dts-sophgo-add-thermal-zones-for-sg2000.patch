@@ -1,7 +1,7 @@
-From d38a50f1426e830664d9a744a21cbf7b46b7e1aa Mon Sep 17 00:00:00 2001
+From 81ba3853def5b3c856f566665eea18c4feae50e1 Mon Sep 17 00:00:00 2001
 From: queenkjuul <queenkjuul@pm.me>
 Date: Wed, 18 Mar 2026 01:29:11 +0000
-Subject: [PATCH 10/20] riscv: dts: sophgo: add thermal zones for sg2000
+Subject: [PATCH 11/21] riscv: dts: sophgo: add thermal zones for sg2000
 
 ---
  arch/riscv/boot/dts/sophgo/sg2000.dtsi | 28 ++++++++++++++++++++++++++

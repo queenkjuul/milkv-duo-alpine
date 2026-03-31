@@ -2,11 +2,11 @@ Source: linux-milkv-duos
 Section: kernel
 Priority: optional
 Maintainer: Julie Hill <queenkjuul@pm.me>
-Build-Depends: debhelper-compat (= 12), bc, bison, flex, kmod, libssl-dev, rsync
+Build-Depends: debhelper-compat (= 12), bc, bison, flex, kmod, libssl-dev, rsync, u-boot-tools
 
 Package: linux-image-milkv-duos
 Architecture: riscv64
-Depends: kmod, u-boot-menu
+Depends: kmod, u-boot-menu, u-boot-tools
 Multi-Arch: foreign
 Description: Linux kernel and modules for Milk-V Duo S
  Pre-built Linux image and all modules for Milk-V Duo S
