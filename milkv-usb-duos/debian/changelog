@@ -1,3 +1,21 @@
+milkv-usb-duos (1.0.5) jammy; urgency=medium
+
+  * Launchpad fixes
+
+ -- Julie Hill <queenkjuul@pm.me>  Tue, 31 Mar 2026 23:56:20 +0000
+
+milkv-usb-duos (1.0.4) jammy; urgency=medium
+
+  * Launchpad fix
+
+ -- Julie Hill <queenkjuul@pm.me>  Tue, 31 Mar 2026 23:54:10 +0000
+
+milkv-usb-duos (1.0.3) jammy; urgency=medium
+
+  * Ditch netplan, fix DHCP, consolidate config
+
+ -- Julie Hill <queenkjuul@pm.me>  Tue, 31 Mar 2026 23:49:11 +0000
+
 milkv-usb-duos (1.0.2) jammy; urgency=medium
 
   * Updated changelog
