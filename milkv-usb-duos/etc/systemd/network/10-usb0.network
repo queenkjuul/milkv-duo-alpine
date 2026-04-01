@@ -10,6 +10,6 @@ IPForward=yes
 
 [DHCPServer]
 PoolOffset=1
-PoolSize=1
+PoolSize=100
 EmitDNS=yes
 DNS=1.1.1.1

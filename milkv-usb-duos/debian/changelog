@@ -1,3 +1,15 @@
+milkv-usb-duos (1.0.7) jammy; urgency=medium
+
+  * Launchpad fix
+
+ -- Julie Hill <queenkjuul@pm.me>  Wed, 01 Apr 2026 01:33:19 +0000
+
+milkv-usb-duos (1.0.6) jammy; urgency=medium
+
+  * Fix DHCP range for USB gadget
+
+ -- Julie Hill <queenkjuul@pm.me>  Wed, 01 Apr 2026 01:30:34 +0000
+
 milkv-usb-duos (1.0.5) jammy; urgency=medium
 
   * Launchpad fixes
