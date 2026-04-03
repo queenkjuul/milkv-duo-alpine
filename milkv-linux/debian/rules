@@ -1,13 +1,19 @@
 #!/usr/bin/make -f
 
+BUILD_ARCH := $(shell dpkg-architecture -qDEB_BUILD_ARCH)
+ifeq ($(BUILD_ARCH),riscv64)
+	export CROSS_COMPILE :=
+else
+	export CROSS_COMPILE := riscv64-linux-gnu-
+endif
+
 SRC := $(CURDIR)/linux
 INSTALL_HDR_PATH=$(CURDIR)/debian/linux-headers-milkv-duos/usr/src/linux-headers-$(KERNELRELEASE)
 INSTALL_MOD_PATH=$(CURDIR)/debian/linux-image-milkv-duos
 
-export KERNELRELEASE := 7.0.0-rc5-qkj1
+export KERNELRELEASE := 7.0.0-rc5-qkj3
 export ARCH := riscv
 export SRCARCH := $(ARCH)
-export CROSS_COMPILE := riscv64-linux-gnu-
 export CC := $(CROSS_COMPILE)gcc
 export HOSTCC := gcc
 
