@@ -1,4 +1,5 @@
 # Ubuntu on the Milk-V Duo S RISC-V
+
 Full-featured, general-purpose Ubuntu 22.04 distribution for Milk-V Duo S SBCs, built on the latest 7.0 Linux kernel.
 
 <img width="1280" height="836" alt="image" src="https://github.com/user-attachments/assets/6a2d1765-dc41-4cb2-b000-97cf976d3f32" />
@@ -6,29 +7,61 @@ Full-featured, general-purpose Ubuntu 22.04 distribution for Milk-V Duo S SBCs, 
 *For now, this is __ONLY__ for the Duo S, but the Duo 256M is planned. Duo 64M is not supported*
 *(I have ordered myself a Duo 64M, though, so I might still port the kernel work over)*
 
+- [Ubuntu on the Milk-V Duo S RISC-V](#ubuntu-on-the-milk-v-duo-s-risc-v)
+  - [What it is](#what-it-is)
+  - [Features](#features)
+  - [Missing Features](#missing-features)
+  - [Using the System](#using-the-system)
+    - [Default Password](#default-password)
+    - [First Boot](#first-boot)
+    - [USB](#usb)
+    - [Pin Configuration](#pin-configuration)
+      - [Changing the USB gadget IP address](#changing-the-usb-gadget-ip-address)
+    - [WiFi + BT](#wifi--bt)
+      - [Usage](#usage)
+      - [Power](#power)
+      - [Boot Warnings](#boot-warnings)
+    - [Bootloader](#bootloader)
+      - [Kernel Upgrades](#kernel-upgrades)
+  - [Notes](#notes)
+  - [Building the System](#building-the-system)
+    - [Setup](#setup)
+    - [Docker](#docker)
+    - [Basic Customization](#basic-customization)
+    - [Advanced - Building Yourself](#advanced---building-yourself)
+      - [Manual Build Sequence](#manual-build-sequence)
+  - [Goals](#goals)
+    - [Kernel Methodology](#kernel-methodology)
+- [\[Below this line is old documentation, likely outdated, updates coming\]](#below-this-line-is-old-documentation-likely-outdated-updates-coming)
+  - [Credits](#credits)
+  - [Setup](#setup-1)
+  - [Before anything else](#before-anything-else)
+  - [Creating the rootfs](#creating-the-rootfs)
+  - [Flashing](#flashing)
+
 ## What it is
 
-This will be a monorepo set up with submodules to pull in:
+This is a monorepo set up with git submodules to pull in:
 
 - Linux 7.0 with all necessary Milk-V Duo S patches
+- Prebuilt vendor bootloader image and applicable patches
 - Scripts for cross-building .deb packages:
   - Linux 7.0
   - Wireless drivers
   - Userspace scripts for setting USB operating mode
   - Userspace scripts for setting up wireless hardware
-  - Prebuilt vendor bootloader image and applicable patches
   - Milk-V `duo-pinmux` tool
-  - [`genimage` for building the SD image](https://github.com/pengutronix/genimage)
   - [bluetui](https://github.com/pythops/bluetui) and [impala](https://github.com/pythops/impala) for managing wireless hardware
+- [`genimage` for building the SD image](https://github.com/pengutronix/genimage)
 - Scripts for generating an Ubuntu 22.04 userspace rootfs
 
 Packages are hosted on Ubuntu PPA:
 
-- https://launchpad.net/~queenkjuul/+archive/ubuntu/milkv-duos
+- <https://launchpad.net/~queenkjuul/+archive/ubuntu/milkv-duos>
 
 ## Features
 
-- 3 USB modes, selectable via systemd service:
+- 3 user-selectable USB modes:
   - USB Host: Use the USB A port to access peripheral devices
   - USB Serial (ACM): Connect to a PC with USB-C and log in over serial
   - USB Network (CDC-NCM) [formerly RNDIS]: Connect to a PC with USB-C and log in over SSH or otherwise access via network protocols
@@ -52,40 +85,21 @@ Packages are hosted on Ubuntu PPA:
 - TPU support
 - Multimedia support (VIP)
 
-## Goals
-
-This is not your typical embedded distribution. Because the Duo S features full-size Ethernet and USB-A ports, in addition to all the typical embedded I/O, the kernel build for this distro features dozens, if not hundreds, of device drivers (built as modules): Game controllers, MIDI devices, HID, serial, printers, modems, sensors, most anything you can think of.
-
-The idea is that if you have a USB-A port, you oughtta be able to use it. The Duo S isn't really powerful enough to be a desktop, but I can envision some fun ways to incorporate it as a Linux Gadget or a mini server or a media player or whatever. I also want this to be a good entrypoint for beginners, because this board has a lot of potential.
-
-You can always reconfigure the kernel to remove what you don't want. The actual kernel without any modules loaded is 9MB,
-
-The Milk-V SDK usage patterns are in some places replicated (hardware state is largely managed by shell scripts, USB NCM mode is the default) but the specific instructions are different. 
-
-### Kernel Methodology
-
-As much as possible is "upstream"/"mainline". Some of the patches applied are likely to be pulled into Linux 7.0 (and some listed on the wiki as unmerged, like audio, have actually been pulled already) and a few I made myself. Wifi drivers are hacky and a little bit vibed but they work so ¯\_(ツ)_/¯
-
-1. Started with basline Linux 7.0-rc3 (and plan to rebase on future rcs, up to 7.0)
-2. Added LKML patches linked from [the Sophgo Linux Wiki](https://github.com/sophgo/linux/wiki)
-3. Added my own patches to the device tree:
-  4. Fix device tree after applying upstream mdio-mux driver patch
-  5. Enable USB OTG in Milk-V Duo S device tree
-  6. Add watchdog timer device tree node (upstream watchdog patch doesn't apply cleanly)
-  7. Enable watchdog timer device node in Milk-V Duo S device tree
-  8. Enable `uart4` for `hci_uart` in Milk-V Duo S device tree
-
 ## Using the System
 
 In general, [this portion of the Milk-V docs also applies to this distribution](https://milkv.io/docs/duo/getting-started/setup) except for a couple things:
 
 - [Setting the USB gadget IP address is different](#changing-the-usb-gadget-ip-address)
 - My build scripts automatically expand the root partition on first boot
+- My `milkv-wifi-setup` tool automatically fixes the WiFi MAC address
 
 ### Default Password
-`root` / `milkv`
+
+User:     `root`
+Password: `milkv`
 
 ### First Boot
+
 The first boot can take ~2 minutes as the system generates SSH keys and expands the root partition to the full size of the SD card. Subsequent boots will be much faster.
 
 ### USB
@@ -112,9 +126,9 @@ Refer to the pinout chart below - the labels don't map 1:1 with the actual comma
 
 #### Changing the USB gadget IP address
 
-**Note that these instructions differ from the Milk-V docs**
+__Note that these instructions differ from the Milk-V docs__
 
-You can edit `/etc/netplan/90-usb-gadget.yaml` to set the IP. You should keep the `/24` unless you know what you're doing. The USB gadget gets the fist IP (`192.168.42.1`) and each client (so likely just the one host PC) will get the next (`192.168.42.2`).
+You can edit `/etc/systemd/network/10-usb0.network` to set the IP. You should keep the `/24` unless you know what you're doing. The USB gadget gets the fist IP (`192.168.42.1`) and each client (so likely just the one host PC) will get a random address in the  `192.168.42.x` range.
 
 ```yaml
       addresses:
@@ -127,11 +141,11 @@ There are 5 packages relevant to wireless on the Duo S:
 
 - `milkv-wireless-duos`: Userspace scripts and systemd units to enable wireless hardware (technically optional)
 - `aic8800-milkv-firmware`: Vendor firmware binary blobs (required)
-- `aic8800-milkv-modules-duos`: Kernel modules for the `linux-image-milkv-duos_7.0~rc4-qkj1` kernel (default kernel for this setup) (required)
+- `aic8800-milkv-modules-duos`: Kernel modules for the `linux-image-milkv-duos` kernel (default kernel for this setup) (required)
 - [`extras/impala`](https://github.com/pythops/impala): an easy-to-use TUI for setting up WiFi connections (optional, third-party)
 - [`extras/bluetui`](https://github.com/pythops/bluetui): an easy-to-use TUI for setting up Bluetooth connections (optional, third-party)
 
-All but the `extras/` packages are installed by default. Wifi and Bluetooth are both enabled by default. Disable one or the other with:
+All are installed by default. Wifi and Bluetooth are both enabled by default. Disable one or the other with:
 
 ```sh
 systemctl disable milkv-wifi
@@ -140,7 +154,7 @@ systemctl disable milkv-bluetooth
 
 #### Usage
 
-The base system installs `iwd` for WiFi management. A nice helper script is provided, `milkv-wifi-setup`, which you can use to connect to a network. `milkv-wifi-setup` also offers the option to apply your WiFi settings at boot, and if chosen, will persist the WiFi MAC address as well (this is normally randomly generated at each boot). 
+The base system installs `iwd` for WiFi management. A nice helper script is provided, `milkv-wifi-setup`, which you can use to connect to a network. `milkv-wifi-setup` also offers the option to apply your WiFi settings at boot, and if chosen, will persist the WiFi MAC address as well (this is normally randomly generated at each boot).
 
 The repo also provides the `impala` and `bluetui` packages for friendly wireless management over SSH connections.
 
@@ -170,14 +184,14 @@ Despite all of these dmesg errors, this boot did produce a working Wifi+BT syste
 
 ### Bootloader
 
-The system is set up with `/boot` on the root ext4 filesystem (`mmcblk0p3`), and `mmcblk0p1` mounted to `/boot/vendor`. 
+The system is set up with `/boot` on the root ext4 filesystem (`mmcblk0p3`), and `mmcblk0p1` mounted to `/boot/vendor`.
 
 `/boot/vendor` contains two files:
 
 - `fip.bin`: vendor-supplied bootloader, modified for "distroboot" - this loads a simple boot menu listing installed kernels, and loads everything it needs from the root ext4 filesystem
-- `boot.sd`: this is a "FIT image" which contains an embedded kernel and device tree. This is provided as a failsafe - you can press a key to interrupt auto-boot then from the U-Boot prompt run `run sdboot` to use the FIT image instead of the "distroboot" menu.
+- `boot.sd`: this is a "FIT image" which contains an embedded kernel and device tree. This is provided as a failsafe, and can be ran with `run sdboot` at the U-Boot prompt.
 
-U-Boot supports the ethernet port, and distroboot supports network booting, and it does appear to work (ethernet initializes, and it fetches an address from DHCP, and it attempts to fetch a file from TFTP, but I don't have TFTP set up to test further).
+U-Boot supports the ethernet port, and distroboot supports network booting, and it does appear to work (ethernet initializes, and it fetches an address from DHCP, and it attempts to fetch a file from TFTP, but I don't have TFTP set up to test further). You still need an SD card with the modified `fip.bin` in the device for this to work.
 
 #### Kernel Upgrades
 
@@ -190,72 +204,121 @@ When the SD card is generated, a `boot.sd` is generated from the kernel in the i
 
 ## Building the System
 
-### Basic - Default Settings
+Building SD images must be done either on an Ubuntu 22.04 VM, or using the provided Docker setup. Docker is highly recommended.
 
-*For now, building the SD card image is only supported on Ubuntu 22.04 hosts on the amd64 platform. A Dockerfile is in progress. It may work on other Debian-based distros but this isn't tested.*
+__Be warned that the setup script will mangle your `/etc/apt/sources.list` file because it assumes it is running in either Docker or a VM. Can't say I didn't warn you!__
 
-`git clone https://github.com/queenkjuul/ubuntu-milkv-duo`
+### Setup
 
-An automatic build process can be initiated with `build.sh`, it will prompt for basic settings (hostname, root password). It will install pre-built packages from my PPA.
+If you plan on only basic customizations (hostname, password, extra APT packages, etc) then only a shallow clone is necessary:
+
+```sh
+git clone https://github.com/queenkjuul/milkv-duo-ubuntu
+```
+
+If you plan on modifying the source packages (building your own kernel/modules, patching the provided userspace scripts, etc) then you should probably do a full recursive clone:
+
+```sh
+git clone --recursive https://github.com/queenkjuul/milkv-duo-ubuntu
+```
+
+### Docker
+
+Once the repo is cloned, you can create the Docker image:
+
+```sh
+cd scripts
+docker build -t milkv-duo .
+cd .. # all other commands expect to be run from the project root
+```
+
+Commands are then run from the project root directory like this:
+
+`docker run -v $PWD:/project -it milkv-duo ./<COMMAND>`
+
+So in the below examples, to run `build.sh -c`, you would actually run:
+
+`docker run -v $PWD:/project -it milkv-duo ./build.sh -c`
+
+or for `scripts/compile.sh`:
+
+`docker run -v $PWD:/root -it milkv-duo ./scripts/compile.sh`
+
+### Basic Customization
+
+You can run `build.sh -c` to set the system hostname and root password. You can modify `scripts/second-stage.sh` before running `build.sh` to customize more advanced settings, like DNS servers, ZRAM, `fstab`, and more. Lastly, you can modify `scripts/first-boot.sh` to modify the first-boot behavior, but this isn't recommended. Remember that any `.deb` files in the project root directory get installed in the target system as well.
 
 ### Advanced - Building Yourself
 
-**THESE INSTRUCTIONS ARE CURRENTLY INCOMPLETE AND CURRENTLY DO NOT WORK**
+After making changes to the source packages in this repo, you can use `scripts/compile.sh` to rebuild all of the source and binary packages, including the kernel, excluding `extras/`. It calls `debuild` twice per package - once to generate a source package, and again to generate a binary `.deb`. None of these packages are signed by default.
 
-`git clone --recursive https://github.com/queenkjuul/ubuntu-milkv-duo`
+When the build script is run, any and all `.deb` files in the project root will be installed in the target system.
 
-Your best bet is a fresh Ubuntu 22.04 VM (the scripts assume you're running 22.04).
+Note that because the `extras/` source packages are a directory down from the root, they are not built by `compile.sh` nor installed automatically after their `.deb` packages are generated. These are third-party projects that I include here unmodified solely to simplify distribution of their cross-compiled binary packages. Build instructions for them are not provided.
 
-You can adjust and rebuild any of the constituent packages. The build script will install any `*.deb` packages within the root directory. So you can go into any submodule (e.g. `milkv-linux`, `milkv-wireless-duos`, etc.) and build a new debian package (I was using `debuild`) which will be installed in the target system. Obviously any pre-built packages you want to include can also be added by just placing them in the project root (`ubuntu-milkv-duo/my-package.deb`) and running the build script.
+#### Manual Build Sequence
 
-**DON'T RUN THE SETUP SCRIPT ON YOUR REAL HOST! USE A VM! IT WILL MANGLE YOUR APT SOURCES.LIST!**
+If you are not using the `compile.sh` script, but you are making modifications to the kernel and/or drivers, it is important to note the proper sequence for building them:
 
-The setup script must be run as root, because it installs dependencies using `apt`:
+1. build the kernel packages
+2. install the resulting `linux-headers-milkv-duos_*.deb` package *in the host system*
+3. build the wireless modules in `aic8800-milkv-modules-duos`
 
-`sudo ./setup.sh`
+Note that when using docker, all 3 steps must be run in the same session in order to work.
 
-Run the build script with:
-
-`./build.sh`
-
-#### Build Sequence
-
-The `aic8800-modules-*` packages require the relevant kernel headers (`linux-headers-milkv-duos`) to be installed on the build system in order to build. Therefore, it is recommended to build the kernel packages first, then the drivers, then everything else:
+The two general build commands for each package are:
 
 1. `debuild -S -sa -us -uc` - builds the source package
 2. `debuild -ariscv64 -b -us -uc` - builds the binary package
-
-(the `-us` and `-uc` and `-sa` options are for disabling signatures - you'd need to omit those flags if you were actually publishing to a PPA)
 
 Following the general order of `kernel -> install generated headers package -> build modules -> build everything else` should get you up and running.
 
 When you run `debuild` within one of the modules, the output will be placed in the repo root directory. When you run `./build.sh`, all `*.deb` files in the root directory will be installed automatically - just make sure all the ones you want are built ahead of time.
 
-#### Customization
+## Goals
 
-You can add packages to the `PACKAGES` list in `second-stage.sh`.
+This is not your typical embedded distribution. Because the Duo S features full-size Ethernet and USB-A ports, in addition to all the typical embedded I/O, the kernel build for this distro features dozens, if not hundreds, of device drivers (built as modules): Game controllers, MIDI devices, HID, serial, printers, modems, sensors, most anything you can think of.
 
-Basic system configuration is handled in `second-stage.sh`
+The idea is that if you have a USB-A port, you oughtta be able to use it. The Duo S isn't really powerful enough to be a desktop, but I can envision some fun ways to incorporate it as a Linux Gadget or a mini server or a media player or whatever. I also want this to be a good entrypoint for beginners, because this board has a lot of potential.
 
+You can always reconfigure the kernel to remove what you don't want. The actual kernel without any modules loaded is 9MB,
+
+The Milk-V SDK usage patterns are in some places replicated (hardware state is largely managed by shell scripts, USB NCM mode is the default) but the specific instructions are different.
+
+### Kernel Methodology
+
+As much as possible is "upstream"/"mainline". Some of the patches applied are likely to be pulled into Linux 7.0 (and some listed on the wiki as unmerged, like audio, have actually been pulled already) and a few I made myself. Wifi drivers are hacky and a little bit vibed but they work so ¯\_(ツ)_/¯
+
+1. Started with basline Linux 7.0-rc3 (and plan to rebase on future rcs, up to 7.0)
+2. Added LKML patches linked from [the Sophgo Linux Wiki](https://github.com/sophgo/linux/wiki)
+3. Added my own patches to the device tree:
+4. Fix device tree after applying upstream mdio-mux driver patch
+5. Enable USB OTG in Milk-V Duo S device tree
+6. Add watchdog timer device tree node (upstream watchdog patch doesn't apply cleanly)
+7. Enable watchdog timer device node in Milk-V Duo S device tree
+8. Enable `uart4` for `hci_uart` in Milk-V Duo S device tree
 
 ===
 [Below this line is old documentation, likely outdated, updates coming]
 ===
 
 ## Credits
+
 By far the most useful reference reference was [Fishwaldo's `sophgo-sg200x-debian` project](https://github.com/Fishwaldo/sophgo-sg200x-debian). This was pretty invaluable.
 
 Everything below this line is from the original README.md of the repo I forked ([credit to ambraglow too, of course](https://github.com/ambraglow/milkv-duo-ubuntu)), so I don't give it my personal approval, but I will leave it here for visibility. The old instructions below will likely be removed, though; my scripts are only loosely similar.
 
-![great friend julie](https://github.com/tvlad1234) _[different julie :)]_
+![great friend julie](https://github.com/tvlad1234) *[different julie :)]*
 ![rootfs guide for risc-v](https://github.com/carlosedp/riscv-bringup/blob/master/Ubuntu-Rootfs-Guide.md)
 ![DO NOT THE CAT!!!](https://github.com/Mnux9)
 
-## Setup 
+## Setup
+
 1. Ubuntu 22.04 LTS installed on a virtual machine
 2. Setup ![duo-buildroot-sdk](https://github.com/milkv-duo/duo-buildroot-sdk#prepare-the-compilation-environment) on your machine
 
 ## Before anything else
+
 ```bash
 # We need to enable a few modules in the kernel configuration before we can continue, so:
 nano ~/duo-buildroot-sdk/build/boards/cv180x/cv1800b_milkv_duo_sd/linux/cvitek_cv1800b_milkv_duo_sd_defconfig
@@ -284,12 +347,14 @@ CONFIG_FANOTIFY
 CONFIG_ZSMALLOC=y
 CONFIG_ZRAM=y
 ```
-Important: to reduce ram usage follow point n.2 of the ![faq](https://github.com/milkv-duo/duo-buildroot-sdk/tree/develop#faqs), 
+
+Important: to reduce ram usage follow point n.2 of the ![faq](https://github.com/milkv-duo/duo-buildroot-sdk/tree/develop#faqs),
 to increase the rootfs partition size you can edit ```duo-buildroot-sdk/milkv/genimage-milkv-duo.cfg```
 at line 16 replace ```size = 256M``` with ```size = 1G``` or higher as desired
-then follow the ![instructions](https://github.com/milkv-duo/duo-buildroot-sdk#step-by-step-compilation) to manually compile buildroot and the kernel and pack it. 
+then follow the ![instructions](https://github.com/milkv-duo/duo-buildroot-sdk#step-by-step-compilation) to manually compile buildroot and the kernel and pack it.
 
 ## Creating the rootfs
+
 ```bash
 # install prerequisites
 sudo apt install debootstrap qemu qemu-user-static binfmt-support dpkg-cross --no-install-recommends
@@ -340,14 +405,14 @@ EOF
 
 # write text to fstab (this is with swap enabled if you want to disable it just put a # before the swap line)
 cat >/etc/fstab <<EOF
-# <file system>	<mount pt>	<type>	<options>	<dump>	<pass>
-/dev/root	/		ext2	rw,noauto	0	1
-proc		/proc		proc	defaults	0	0
-devpts		/dev/pts	devpts	defaults,gid=5,mode=620,ptmxmode=0666	0	0
-tmpfs		/dev/shm	tmpfs	mode=0777	0	0
-tmpfs		/tmp		tmpfs	mode=1777	0	0
-tmpfs		/run		tmpfs	mode=0755,nosuid,nodev,size=64M	0	0
-sysfs		/sys		sysfs	defaults	0	0
+# <file system> <mount pt> <type> <options> <dump> <pass>
+/dev/root /  ext2 rw,noauto 0 1
+proc  /proc  proc defaults 0 0
+devpts  /dev/pts devpts defaults,gid=5,mode=620,ptmxmode=0666 0 0
+tmpfs  /dev/shm tmpfs mode=0777 0 0
+tmpfs  /tmp  tmpfs mode=1777 0 0
+tmpfs  /run  tmpfs mode=0755,nosuid,nodev,size=64M 0 0
+sysfs  /sys  sysfs defaults 0 0
 /dev/mmcblk0p3  none            swap    sw              0       0
 EOF
 # set hostname
@@ -363,18 +428,26 @@ gzip Ubuntu-jammy-rootfs.tar
 rm -rf temp-rootfs
 
 ```
+
 ## Flashing
+
 next up, we flash the image on the sd card like so:
+
 ```bash
 dd if=milkv-duo.img of=/dev/sdX status=progress #replace X with your device name
 ```
-we mount the rootfs partition and we delete all the files inside with ```bash sudo rm -r /media/yourusername/rootfs``` 
-then create a directory ```mkdir ubunturootfs``` to extract our ```Ubuntu-jammy-rootfs.tar``` and run 
+
+we mount the rootfs partition and we delete all the files inside with ```bash sudo rm -r /media/yourusername/rootfs```
+then create a directory ```mkdir ubunturootfs``` to extract our ```Ubuntu-jammy-rootfs.tar``` and run
+
 ```bash
 tar -xf Ubuntu-jammy-rootfs.tar -C ubunturootfs
 ```
+
 now we copy the rootfs to our mounted partition:
+
 ```bash
 sudo cp -r ubunturootfs/* /media/yournamehere/rootfs/
 ```
+
 and that's all! you should now be able to boot into ubuntu no problem
