@@ -19,9 +19,9 @@ mv /queenkjuul-ubuntu-milkv-$BOARD.gpg /etc/apt/trusted.gpg.d/queenkjuul-ubuntu-
 chmod 644 /etc/apt/trusted.gpg.d/queenkjuul-ubuntu-milkv-$BOARD.gpg
 apt-get update || { echo "failed to update packages"; exit 1; }
 
-LOCAL_DEBS=$(ls /*.deb | grep -v "milkv-pinmux-")
+LOCAL_DEBS=$(ls /*.deb | grep -v "milkv-pinmux-" || echo "")
 LOCAL_PACKAGES=
-for deb in /*.deb; do
+for deb in $LOCAL_DEBS; do
   LOCAL_PACKAGES="$LOCAL_PACKAGES $(dpkg-deb -f "$deb" Package)"
 done
 TARGET_PACKAGES=
@@ -122,7 +122,7 @@ rm /etc/update-motd.d/91-release-upgrade
 echo "OK."
 
 echo -n "Cleaning up..."
-rm /*.deb
+rm /*.deb || true
 rm /second-stage.sh
 echo "OK."
 echo "Second stage rootfs setup complete."
