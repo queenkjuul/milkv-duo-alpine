@@ -1,5 +1,5 @@
 # Ubuntu on the Milk-V Duo S RISC-V
-New and Improved for 2026!
+Full-featured, general-purpose Ubuntu 22.04 distribution for Milk-V Duo S SBCs, built on the latest 7.0 Linux kernel.
 
 <img width="1280" height="836" alt="image" src="https://github.com/user-attachments/assets/6a2d1765-dc41-4cb2-b000-97cf976d3f32" />
 
@@ -10,12 +10,21 @@ New and Improved for 2026!
 
 This will be a monorepo set up with submodules to pull in:
 
-- Milk-V duo-buildroot-sdk with some minor patches from me
 - Linux 7.0 with all necessary Milk-V Duo S patches
-- Scripts for building .deb packages:
-  - Linux 7.0 modules
-  - User space scripts for setting USB operating mode
+- Scripts for cross-building .deb packages:
+  - Linux 7.0
+  - Wireless drivers
+  - Userspace scripts for setting USB operating mode
+  - Userspace scripts for setting up wireless hardware
+  - Prebuilt vendor bootloader image and applicable patches
+  - Milk-V `duo-pinmux` tool
+  - [`genimage` for building the SD image](https://github.com/pengutronix/genimage)
+  - [bluetui](https://github.com/pythops/bluetui) and [impala](https://github.com/pythops/impala) for managing wireless hardware
 - Scripts for generating an Ubuntu 22.04 userspace rootfs
+
+Packages are hosted on Ubuntu PPA:
+
+- https://launchpad.net/~queenkjuul/+archive/ubuntu/milkv-duos
 
 ## Features
 
@@ -31,6 +40,7 @@ This will be a monorepo set up with submodules to pull in:
 - Working Wifi (at least 2.4GHz, 5GHz untested)
 - Working Bluetooth
 - I2S Audio driver (untested)
+- Automatic root partition expansion on first boot
 
 ## Missing Features
 
@@ -44,11 +54,11 @@ This will be a monorepo set up with submodules to pull in:
 
 ## Goals
 
-This is not your typical embedded distribution. Because the Duo S features full-size Ethernet and USB-A ports, in addition to all the typical embedded I/O, the kernel build for this distro features dozens, if not hundreds, of device drivers (built as modules): Game controllers, MIDI devices, HID, serial, printers, modems, sensors, most anything you can think of. This means the kernel itself is over 20MB. 
+This is not your typical embedded distribution. Because the Duo S features full-size Ethernet and USB-A ports, in addition to all the typical embedded I/O, the kernel build for this distro features dozens, if not hundreds, of device drivers (built as modules): Game controllers, MIDI devices, HID, serial, printers, modems, sensors, most anything you can think of.
 
 The idea is that if you have a USB-A port, you oughtta be able to use it. The Duo S isn't really powerful enough to be a desktop, but I can envision some fun ways to incorporate it as a Linux Gadget or a mini server or a media player or whatever. I also want this to be a good entrypoint for beginners, because this board has a lot of potential.
 
-You can always reconfigure the kernel to remove what you don't want.
+You can always reconfigure the kernel to remove what you don't want. The actual kernel without any modules loaded is 9MB,
 
 The Milk-V SDK usage patterns are in some places replicated (hardware state is largely managed by shell scripts, USB NCM mode is the default) but the specific instructions are different. 
 
@@ -75,6 +85,9 @@ In general, [this portion of the Milk-V docs also applies to this distribution](
 ### Default Password
 `root` / `milkv`
 
+### First Boot
+The first boot can take ~2 minutes as the system generates SSH keys and expands the root partition to the full size of the SD card. Subsequent boots will be much faster.
+
 ### USB
 
 USB drivers are built into the kernel. The `milkv-usb-duos` package contains userspace scripts for switching modes and a systemd unit for setting modes at boot time.
@@ -89,6 +102,14 @@ You can switch to Host Mode (USB-A) with:
 
 `milkv-usb-mode host` and then reboot. There are systemd services that handle the initialization. If you disable those, use `milkv-usb-init` to set things up after boot.
 
+### Pin Configuration
+
+`duo-pinmux`, as provided by Milk-V, is also included in the system image. You can use it to reconfigure pins - all of the Duo S's hardware is exposed to the kernel via the device tree, but some of it may not work until you set the pins correctly. For example, to use `I2C4` via pins `B20` and `B21`, you must set pins `B20` and `B21` appropriately with `duo-pinmux`. After that, the `/dev/i2c-*` devices will work (you may need to `modprobe i2c-dev` first). Note that just because the `/dev/*` node appears, doesn't mean it works - you need to set the pins correctly. Only `/dev/ttyS0` (the boot console) and `/dev/ttyS4` (the bluetooth UART) are guaranteed to work at boot.
+
+Refer to the pinout chart below - the labels don't map 1:1 with the actual command options - use `duo-pinmux -l` for all of the valid options
+
+![](https://milkv.io/duo-s/duos-pinout.webp)
+
 #### Changing the USB gadget IP address
 
 **Note that these instructions differ from the Milk-V docs**
@@ -102,29 +123,40 @@ You can edit `/etc/netplan/90-usb-gadget.yaml` to set the IP. You should keep th
 
 ### WiFi + BT
 
-There are 3 packages relevant to wireless on the Duo S:
+There are 5 packages relevant to wireless on the Duo S:
 
 - `milkv-wireless-duos`: Userspace scripts and systemd units to enable wireless hardware (technically optional)
 - `aic8800-milkv-firmware`: Vendor firmware binary blobs (required)
 - `aic8800-milkv-modules-duos`: Kernel modules for the `linux-image-milkv-duos_7.0~rc4-qkj1` kernel (default kernel for this setup) (required)
+- [`extras/impala`](https://github.com/pythops/impala): an easy-to-use TUI for setting up WiFi connections (optional, third-party)
+- [`extras/bluetui`](https://github.com/pythops/bluetui): an easy-to-use TUI for setting up Bluetooth connections (optional, third-party)
 
-These packages are all installed in a default installation. Wifi and Bluetooth are both enabled by default. Disable one or the other with:
+All but the `extras/` packages are installed by default. Wifi and Bluetooth are both enabled by default. Disable one or the other with:
 
 ```sh
 systemctl disable milkv-wifi
 systemctl disable milkv-bluetooth
 ```
 
-Note that since both Bluetooth and Wifi are on the same chip and use the same driver, both will be enabled at the hardware level when either script is enabled. The difference is that the Bluetooth service starts an `hciattach` session as a daemon, the WiFi service does not. Both services will load the necessary modules for either mode. Disable both services (or prevent loading the `aic8800_bsp` driver) to keep the wireless chip powered off.
+#### Usage
+
+The base system installs `iwd` for WiFi management. A nice helper script is provided, `milkv-wifi-setup`, which you can use to connect to a network. `milkv-wifi-setup` also offers the option to apply your WiFi settings at boot, and if chosen, will persist the WiFi MAC address as well (this is normally randomly generated at each boot). 
+
+The repo also provides the `impala` and `bluetui` packages for friendly wireless management over SSH connections.
+
+My personal recommendation is to use `milkv-wifi-setup` initially, as it works well in a serial terminal and sets up the `iwd` daemon and WiFi MAC address. Then, once you're connected to WiFi and logged in over SSH, switch to `impala` - it's much more versatile, it looks nicer, and it's just as easy to use.
+
+#### Power
+
+Note that since both Bluetooth and Wifi are on the same chip and use the same driver, both will be enabled at the hardware level when either script is enabled. The difference is that the Bluetooth service starts an `hciattach` session as a daemon and loads the `bluetooth` module, the WiFi service does not. Disable both services (or prevent loading the `aic8800_bsp` driver) to keep the wireless chip powered off.
+
+#### Boot Warnings
 
 There are some false alarm errors on boot when using the wireless chip, but they don't affect operation. Here's a normal, working boot log:
 
 ```
-[   21.040803] stmmaceth 4070000.ethernet eth0: Failed to restore VLANs
-[  OK  ] Finished Milk-V Duo S USB OTG.
 [   22.026658] mmc1: tuning execution failed: -110
 [   22.026691] mmc1: error -110 whilst initialising SDIO card
-[  OK  ] Started User Login Management.
 [   23.562645] aicbsp: Device init failed, powering down
 [   32.314462] aicbsp: sdio_err:<aicwf_sdio_bus_pwrctl,1498>: bus down
 [   33.042238] ieee80211 phy0:
@@ -134,15 +166,33 @@ There are some false alarm errors on boot when using the wireless chip, but they
 [   35.749812] Bluetooth: hci0: Opcode 0x2003 failed: -110
 ```
 
+Despite all of these dmesg errors, this boot did produce a working Wifi+BT system. Don't be fooled.
+
+### Bootloader
+
+The system is set up with `/boot` on the root ext4 filesystem (`mmcblk0p3`), and `mmcblk0p1` mounted to `/boot/vendor`. 
+
+`/boot/vendor` contains two files:
+
+- `fip.bin`: vendor-supplied bootloader, modified for "distroboot" - this loads a simple boot menu listing installed kernels, and loads everything it needs from the root ext4 filesystem
+- `boot.sd`: this is a "FIT image" which contains an embedded kernel and device tree. This is provided as a failsafe - you can press a key to interrupt auto-boot then from the U-Boot prompt run `run sdboot` to use the FIT image instead of the "distroboot" menu.
+
+U-Boot supports the ethernet port, and distroboot supports network booting, and it does appear to work (ethernet initializes, and it fetches an address from DHCP, and it attempts to fetch a file from TFTP, but I don't have TFTP set up to test further).
+
+#### Kernel Upgrades
+
+When the SD card is generated, a `boot.sd` is generated from the kernel in the image, and installed to `/boot/vendor`. Kernel upgrades installed via APT will generate new `boot.sd` images, stored at `/boot/boot.sd-$KERNELVERSION` - they are not automatically installed to `/boot/vendor` (`mmcblk0p1`) - after you have confirmed that the new kernel works correctly by booting it, you can replace the old `/boot/vendor/boot.sd` with the new one. Because `boot.sd` is provided primarily as a failsafe should "distroboot" fail, the previous known-good `boot.sd` is left in place until you manually replace it.
+
 ## Notes
 
-- `/dev/ttyS1` is dedicated to the Bluetooth controller, at least for now. I will see about binding it to ttyS3 so that the other UARTS can take 1 and 2.
 - While USB-C Serial is available, it doesn't initialize until late in the boot process, and does not display the kernel console. You will need to use the UART0 pins and connect to an adapter to troubleshoot boot problems.
-- Board has soft-reset but not soft-poweroff. `systemctl poweroff` will halt the system, but it remains powered as long as it's supplied.
+- Board has soft-reset but not soft-poweroff. `systemctl poweroff` will halt the system, but it remains powered as long as power is supplied.
 
 ## Building the System
 
 ### Basic - Default Settings
+
+*For now, building the SD card image is only supported on Ubuntu 22.04 hosts on the amd64 platform. A Dockerfile is in progress. It may work on other Debian-based distros but this isn't tested.*
 
 `git clone https://github.com/queenkjuul/ubuntu-milkv-duo`
 
@@ -150,11 +200,15 @@ An automatic build process can be initiated with `build.sh`, it will prompt for 
 
 ### Advanced - Building Yourself
 
+**THESE INSTRUCTIONS ARE CURRENTLY INCOMPLETE AND CURRENTLY DO NOT WORK**
+
 `git clone --recursive https://github.com/queenkjuul/ubuntu-milkv-duo`
 
 Your best bet is a fresh Ubuntu 22.04 VM (the scripts assume you're running 22.04).
 
 You can adjust and rebuild any of the constituent packages. The build script will install any `*.deb` packages within the root directory. So you can go into any submodule (e.g. `milkv-linux`, `milkv-wireless-duos`, etc.) and build a new debian package (I was using `debuild`) which will be installed in the target system. Obviously any pre-built packages you want to include can also be added by just placing them in the project root (`ubuntu-milkv-duo/my-package.deb`) and running the build script.
+
+**DON'T RUN THE SETUP SCRIPT ON YOUR REAL HOST! USE A VM! IT WILL MANGLE YOUR APT SOURCES.LIST!**
 
 The setup script must be run as root, because it installs dependencies using `apt`:
 
@@ -179,9 +233,7 @@ When you run `debuild` within one of the modules, the output will be placed in t
 
 #### Customization
 
-Any packages in the repo root (i.e. sitting next to `build.sh`) will be copied into the rootfs and installed.
-
-You can also add packages to the `PACKAGES` list in `second-stage.sh`.
+You can add packages to the `PACKAGES` list in `second-stage.sh`.
 
 Basic system configuration is handled in `second-stage.sh`
 
@@ -191,6 +243,10 @@ Basic system configuration is handled in `second-stage.sh`
 ===
 
 ## Credits
+By far the most useful reference reference was [Fishwaldo's `sophgo-sg200x-debian` project](https://github.com/Fishwaldo/sophgo-sg200x-debian). This was pretty invaluable.
+
+Everything below this line is from the original README.md of the repo I forked ([credit to ambraglow too, of course](https://github.com/ambraglow/milkv-duo-ubuntu)), so I don't give it my personal approval, but I will leave it here for visibility. The old instructions below will likely be removed, though; my scripts are only loosely similar.
+
 ![great friend julie](https://github.com/tvlad1234) _[different julie :)]_
 ![rootfs guide for risc-v](https://github.com/carlosedp/riscv-bringup/blob/master/Ubuntu-Rootfs-Guide.md)
 ![DO NOT THE CAT!!!](https://github.com/Mnux9)
