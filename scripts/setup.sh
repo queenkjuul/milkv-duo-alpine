@@ -5,11 +5,10 @@ set -e
 
 export DEBIAN_FRONTEND=noninteractive
 
-# everything after u-boot-tools is from duo-buildroot-sdk-v2 and may not strictly be necessary
 BUILD_DEPS=(qemu qemu-user-static binfmt-support dpkg-cross \
-  arch-test mmdebstrap libfakeroot:riscv64 libfakechroot:riscv64 \
-  libconfuse-dev debhelper devscripts \
-  u-boot-tools \
+  arch-test mmdebstrap fakechroot libfakeroot:riscv64 libfakechroot:riscv64 \
+  libconfuse-dev debhelper devscripts libssl-dev:riscv64 \
+  u-boot-tools gcc-riscv64-linux-gnu libc6-dev-riscv64-cross kmod \
   pkg-config build-essential ninja-build automake autoconf \
   libtool wget curl git gcc libssl-dev bc slib squashfs-tools android-sdk-libsparse-utils \
   jq python3-distutils scons parallel tree python3-dev python3-pip device-tree-compiler ssh \
@@ -31,7 +30,11 @@ deb [arch=riscv64] http://ports.ubuntu.com/ubuntu-ports/ jammy-updates main rest
 deb [arch=riscv64] http://ports.ubuntu.com/ubuntu-ports/ jammy-backports main restricted universe multiverse
 deb [arch=riscv64] http://ports.ubuntu.com/ubuntu-ports/ jammy-security main restricted universe multiverse
 EOF
-add-apt-repository ppa:queenkjuul/milkv-duos
+
+apt-get update
+apt-get install software-properties-common -y
+add-apt-repository ppa:queenkjuul/milkv-duos -y
+apt-get upgrade -y
 
 echo "Checking dependencies..."
 for pkg in "${BUILD_DEPS[@]}"; do
@@ -48,10 +51,12 @@ if [ ! ${#MISSING_DEPS[@]} -eq 0 ]; then
 fi
 echo "OK."
 
-echo "Installing genimage..."
-cd genimage
-./autogen.sh
-./configure
-make
-make install
-echo "OK."
+if ! which genimage && [ -z $DOCKER_BUILD ];then
+    echo "Installing genimage..."
+    [ -d ../genimage ] && cd ../genimage || cd genimage
+    ./autogen.sh
+    ./configure
+    make
+    make install
+    echo "OK."
+fi
