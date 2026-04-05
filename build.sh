@@ -47,14 +47,15 @@ Selected Configuration:
     Package Source: $PKG_URL
     Package Suites: $PKG_STE
     Release:        $RELEASE
-    HNAME:          $HNAME
+    Hostname:       $HNAME
     Password:       $DISPLAY_PASSWORD
 ======================================
 EOF
 
 echo "Running mmdebstrap"
 rm -rf rootfs
-mkdir rootfs
+mkdir -p rootfs
+mkdir -p images
 mmdebstrap --arch=riscv64 \
             --mode=fakechroot \
             --variant=standard \
@@ -72,6 +73,7 @@ mmdebstrap --arch=riscv64 \
 
 echo -n "Installing Bootloader..."
 cp rootfs/boot/boot.sd-* images/boot.sd
+cp milkv-bootloader/fip.bin images/fip.bin
 echo "OK."
 
 echo "Generating SD Card Image..."
