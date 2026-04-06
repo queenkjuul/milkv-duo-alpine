@@ -9,6 +9,7 @@ PKG_STE="main restricted universe multiverse"
 PKG_SRC="deb $PKG_URL $PKG_STE"
 BOARD=duos
 PPA_URL=https://ppa.launchpadcontent.net/queenkjuul/milkv-$BOARD/ubuntu
+OVERDRIVE=.od
 
 FLAG=$1
 
@@ -22,6 +23,7 @@ build.sh - create an Ubuntu image for Milk-V Duo boards
     -c | --custom   prompt for settings
 
 default hostname is "ubuntu-milkv" and default root password is "milkv"
+CPU overdrive is enabled by default (1050MHz vs 850MHz vendor default)
 EOF
     exit
 fi
@@ -29,6 +31,8 @@ fi
 if [ "$1" = "--custom" ] || [ "$1" = "-c" ]; then
     [ -z "$HNAME" ] && read -rp "hostname (optional, default: $DEFAULT_HNAME): " HNAME
     [ -z "$PASSWORD" ] && { read -rsp "root password (optional, default: $DEFAULT_PASSWORD): " PASSWORD; echo; }
+    read -rp 'enable CPU overdrive? y = 1050MHz, n = 850MHz (y/n): ' OD
+    [ "$OD" = "n" ] && OVERDRIVE=""
 fi
 
 [ -z "$HNAME" ] && HNAME=$DEFAULT_HNAME
@@ -40,6 +44,8 @@ else
     DISPLAY_PASSWORD="Changed by user"
 fi
 
+[ "$OVERDRIVE" = ".od" ] && DISPLAY_OD="Enabled (1050MHz)" || DISPLAY_OD="Disabled (850MHz)"
+
 cat <<EOF
 ==== Ubuntu for Milk-V Duo Boards ====
 Selected Configuration:
@@ -49,6 +55,7 @@ Selected Configuration:
     Release:        $RELEASE
     Hostname:       $HNAME
     Password:       $DISPLAY_PASSWORD
+    CPU Overdrive:  $DISPLAY_OD
 ======================================
 EOF
 
@@ -73,7 +80,7 @@ mmdebstrap --arch=riscv64 \
 
 echo -n "Installing Bootloader..."
 cp rootfs/boot/boot.sd-* images/boot.sd
-cp milkv-bootloader/fip.bin images/fip.bin
+cp milkv-bootloader/$BOARD/fip.bin$OVERDRIVE images/fip.bin
 echo "OK."
 
 echo "Generating SD Card Image..."
