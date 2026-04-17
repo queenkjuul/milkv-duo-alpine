@@ -1,3 +1,9 @@
+aic8800-milkv-firmware (1.0.0~noble) noble; urgency=medium
+
+  * Rerelease for Noble
+
+ -- Julie Hill <queenkjuul@pm.me>  Fri, 17 Apr 2026 00:43:00 +0000
+
 aic8800-milkv-firmware (1.0.0) jammy; urgency=medium
 
   * Tested and verified for Launchpad upload
