@@ -1,0 +1,14 @@
+Source: sacad
+Section: utils
+Priority: optional
+Maintainer: Julie Hill <queenkjuul@pm.me>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.0
+Homepage: https://github.com/desbma/sacad
+Rules-Requires-Root: no
+
+Package: sacad
+Architecture: riscv64
+Depends: ${misc:Depends} libc6 (>= 2.39), libgcc-s1
+Description: Smart Automatic Cover Art Downloader
+ Downloads cover art, smartly and automatically
