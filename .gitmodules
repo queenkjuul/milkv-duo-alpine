@@ -34,3 +34,6 @@
 [submodule "extras/sacad/src"]
 	path = extras/sacad/src
 	url = https://github.com/desbma/sacad.git
+[submodule "sophgo-arduino"]
+	path = sophgo-arduino
+	url = git@github.com:queenkjuul/sophgo-arduino.git
