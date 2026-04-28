@@ -1,0 +1,19 @@
+Source: milkv-dt-overlays
+Section: utils
+Priority: optional
+Maintainer: Julie Hill <queenkjuul@pm.me>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.0
+Homepage: https://github.com/queenkjuul/milkv-duo-ubuntu
+Vcs-Browser: https://github.com/queenkjuul/milkv-duo-ubuntu
+Vcs-Git: https://github.com/queenkjuul/milkv-duo-ubuntu.git
+Rules-Requires-Root: no
+
+Package: milkv-dt-overlays
+Architecture: riscv64
+Depends: ${misc:Depends} device-tree-compiler, u-boot-menu
+Description: Tool for managing device tree overlays
+ Presents a menu showing all locally supplied device
+ tree overlay source files (/usr/src/dt-overlay/*.dts)
+ and enables automated building and installation to 
+ the system U-Boot FDT overlay directory.

@@ -1,0 +1,7 @@
+.debhelper/
+milkv-dt-overlays/
+debhelper-build-stamp
+files
+*.log
+*.debhelper
+*.substvars

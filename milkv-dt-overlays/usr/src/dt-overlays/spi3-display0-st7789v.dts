@@ -1,0 +1,43 @@
+/*
+  Device tree node for the Adafruit MiniPiTFT 1.13" Color TFT display.
+
+  **DO NOT ATTACH THE MiniPiTFT DIRECTLY TO THE DUO S HEADERS!**
+  **THIS OVERLAY REQUIRES MODIFICATION TO WORK ON DUO 64M/256M!**
+
+  You must refer to the MiniPiTFT pinout to ensure the pins 
+  connect to the right places.
+  
+  This example assumes the following connections:
+
+    - A20 - DC pin on display - pinmux as GPIO
+    - A19 - Backlight controller - pinmux as GPIO
+    - B13, B14, B15, B16 - SPI bus to display - pinmux as SPI3
+
+  You can connect the button pins of the MiniPiTFT to any available GPIO
+
+  You can connect the I2C pins of the MiniPiTFT to I2C1 or I2C3
+
+  The Duo S has some 1V8 GPIO pins, which are insufficient to drive
+  the display, it's best to stick to A* pins vs C* pins.
+*/
+
+/dts-v1/;
+/plugin/;
+
+&spi3 {
+    status = "okay";
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    display@0 {
+        compatible = "sitronix,st7789v";
+        reg = <0>;
+        spi-max-frequency = <50000000>;
+        rotate = <270>;
+        fps = <30>;
+        buswidth = <8>;
+        dc-gpios = <&porta 20 0>;
+        led-gpios = <&porta 19 0>;
+        status = "okay";
+    };
+};

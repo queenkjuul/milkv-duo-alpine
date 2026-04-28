@@ -1,0 +1,18 @@
+/*
+	Enables a generic SPI device on spi3.
+	Despite the specific device ID, you can use this to 
+	send and receive raw SPI data from any SPI device.
+*/
+
+/dts-v1/;
+/plugin/;
+
+&spi3 {
+  status = "okay";
+
+	spidev@0 {
+		compatible = "rohm,dh2228fv";
+		reg = <0>;
+		spi-max-frequency = <25000000>;
+	};
+};

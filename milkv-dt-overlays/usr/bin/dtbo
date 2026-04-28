@@ -1,0 +1,122 @@
+#!/usr/bin/env bash
+
+set -e
+
+CONF=/etc/default/u-boot
+
+COMMAND=$1
+FILE=$2
+
+[ -z "$COMMAND" ] && COMMAND=help
+
+compile() {
+  SRC=$1
+  DST=$2
+  [ -f "$SRC" ] || SRC="/usr/src/dt-overlays/$SRC"
+  if [ -f "$SRC" ]; then
+    dtc -@ -I dts -O dtb -o $DST $SRC
+  else
+    echo "File not found."
+    exit 1
+  fi
+}
+
+enable() {
+  FILE=$1
+  if [ ! -f "/boot/dtbo/$FILE" ]; then echo "File not found."; exit 1; fi
+  local CURRENT=$(
+    source $CONF 2>/dev/null
+    echo "$U_BOOT_FDT_OVERLAYS"
+  )
+  read -ra CURRENT <<< "$CURRENT"
+  local NEW=()
+  for item in "${CURRENT[@]}"; do
+    [[ ! "$item" = "$FILE" ]] && NEW+=("$item")
+  done
+  NEW+=("$FILE")
+  local FINAL="${NEW[*]}"
+  if grep -q "^U_BOOT_FDT_OVERLAYS=" "$CONF"; then
+    sed -i "s|^U_BOOT_FDT_OVERLAYS=.*|U_BOOT_FDT_OVERLAYS=\"$FINAL\"|" "$CONF"
+  else
+    echo "U_BOOT_FDT_OVERLAYS=\"$FINAL\"" >> "$CONF"
+  fi
+}
+
+if [ "$COMMAND" = "help" ]; then
+  cat <<'EOF'
+
+dtbo - A tool for managing Device Tree Overlays
+
+Usage:
+
+  dtbo COMMAND FILE
+
+Commands:
+
+  help
+    You are here
+
+  install FILE
+    Compiles a provided DTS file into a DTB file,
+    places it in /boot/dtbo, and updates U-Boot to
+    apply the DTB at boot time. If FILE is not a full
+    path and is not found in the current directory,
+    it will be looked for in /usr/src/dt-overlays
+
+  compile FILE
+    Compiles the provided DTS file and outputs it
+    to the current directory. If FILE is not a full
+    path and is not found in the current directory,
+    it will be looked for in /usr/src/dt-overlays
+
+  enable FILE
+    Adds the provided DTB file to U-Boot and updates
+    U-Boot to apply the DTB at boot time.
+    FILE should be the name of a file already placed
+    in /boot/dtbo
+
+  disable FILE
+    Removes the provided DTB file from U-Boot and updates
+    U-Boot to prevent applying the DTB at boot time.
+
+Notes:
+
+  Example DTS source files can be found in
+
+    /usr/src/dt-overlays
+  
+  These examples can be applied via
+
+    dtbo install leds.dts
+
+  and later disabled with
+
+    dtbo disable leds.dtb
+
+  DTS files may need modifying to work with your Duo variant,
+  read them before installing them!
+
+EOF
+
+elif [ "$COMMAND" = "compile" ]; then
+  SRC=$FILE
+  DTB=$(basename $FILE .dts).dtb
+  compile $SRC $DTB
+elif [ "$COMMAND" = "install" ]; then
+  SRC=$FILE
+  DTB=$(basename $FILE .dts).dtb
+  DST="/boot/dtbo/$DTB"
+  compile $SRC $DST
+  enable $DTB
+  u-boot-update
+elif [ "$COMMAND" = "enable" ]; then
+  enable $FILE
+  u-boot-update
+elif [ "$COMMAND" = "disable" ]; then
+  grep -qP "\b$FILE\b" $CONF || exit 0
+  sed -i "s|\b$FILE\b||g" $CONF
+  u-boot-update
+else
+  echo "Invalid argument."
+  exit 1
+fi

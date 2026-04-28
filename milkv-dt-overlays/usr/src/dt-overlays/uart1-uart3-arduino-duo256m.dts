@@ -1,0 +1,20 @@
+/*
+    By default, the devicetree enables all supported devices.
+    When Linux is driving the UARTs, though, Arduino
+    fails to initialize (well, it doesn't fail, but it
+    times out for several minutes before starting).
+    Disabling them in the devicetree ensures Arduino
+    code can start up correctly (even though actually
+    using the UARTs from Arduino code doesn't currently work)
+*/
+
+/dts-v1/;
+/plugin/;
+
+&uart1 {
+    status = "disabled";
+};
+
+&uart3 {
+    status = "disabled";
+};

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ "$1" = "configure" ]; then
+  if grep -qi "^#*\s*U_BOOT_FDT_OVERLAYS_DIR=" /etc/default/u-boot; then
+    sed -i "s|^#*\sU_BOOT_FDT_OVERLAYS_DIR=.*|U_BOOT_FDT_OVERLAYS_DIR=/boot/dtbo|" /etc/default/u-boot
+  else
+    echo "U_BOOT_FDT_OVERLAYS_DIR=/boot/dtbo" >> /etc/default/u-boot
+  fi
+  if dpkg -s linux-image-milkv-duos >/dev/null 2>&1; then
+    cp /usr/src/dt-overlays/leds-duos.dts /usr/src/dt-overlays/leds.dts
+  elif dpkg -s linux-image-milkv-duo256m >/dev/null 2>&1; then
+    cp /usr/src/dt-overlays/leds-duo256m.dts /usr/src/dt-overlays/leds.dts
+  elif dpkg -s linux-image-milkv-duo >/dev/null 2>&1; then
+    cp /usr/src/dt-overlays/leds-duo.dts /usr/src/dt-overlays/leds.dts
+  fi
+  u-boot-update
+fi

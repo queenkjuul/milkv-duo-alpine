@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+clean:
+	rm -rf debian/.debhelper || true
+	rm -rf debian/milkv-dt-overlays || true
+	rm debian/*debhelper* || true
+	rm debian/*substvars* || true
+	rm debian/files || true

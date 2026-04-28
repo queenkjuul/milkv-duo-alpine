@@ -1,0 +1,11 @@
+milkv-dt-overlays (0.0.2) noble; urgency=medium
+
+  * Fix packaging bug
+
+ -- Julie Hill <queenkjuul@pm.me>  Tue, 28 Apr 2026 08:10:43 +0000
+
+milkv-dt-overlays (0.0.1) noble; urgency=medium
+
+  * Initial Release.
+
+ -- Julie Hill <queenkjuul@pm.me>  Fri, 17 Apr 2026 04:20:06 +0000

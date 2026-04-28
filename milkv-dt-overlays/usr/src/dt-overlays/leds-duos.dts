@@ -1,0 +1,37 @@
+/*
+  Assigns the Duo built-in blue LED to the led0 device
+  This allows you to assign different Linux LED triggers,
+  like CPU activity, network activity, blink, heartbeat, etc.
+
+  The pin assignments for the built-in blue LED are as follows:
+
+   - Duo S:   porta 29
+   - Duo 64:  portc 24
+   - Duo 256: porte 2
+
+    For the list of available triggers, run
+    
+        cat /sys/class/leds/builtin/trigger
+
+*/
+/dts-v1/;
+/plugin/;
+
+&{/} {
+    model_leds: leds {
+        compatible = "gpio-leds";
+        pinctl-names = "default";
+
+        led0 {
+            label = "builtin";
+            gpios = <&porta 29 0>;
+            linux,default-trigger = "heartbeat";
+            default-state = "on";
+        };
+
+        /* led1 {
+            label = "my-led";
+            gpios ...
+        ;} */
+    };
+};
