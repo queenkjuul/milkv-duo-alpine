@@ -1,28 +1,49 @@
-# Ubuntu on the Milk-V Duo S RISC-V
+# Ubuntu and Mainline Linux on the Milk-V Duo S/256M RISC-V
 
-Full-featured, general-purpose Ubuntu 22.04 distribution for Milk-V Duo S SBCs, built on the latest 7.0 Linux kernel.
+Full-featured, general-purpose Ubuntu 24.04 distribution for Milk-V Duo S and Duo 256M SBCs, built on the latest mainline 7.0 Linux kernel. Now with **Arduino!***
 
 <img width="1280" height="836" alt="image" src="https://github.com/user-attachments/assets/6a2d1765-dc41-4cb2-b000-97cf976d3f32" />
 
-*For now, this is __ONLY__ for the Duo S, but the Duo 256M is planned. Duo 64M is not supported*
-*(I have ordered myself a Duo 64M, though, so I might still port the kernel work over)*
+*The Duo 64M model has insufficient memory to run Ubuntu, as `apt` requires more memory than is available. I do have a Duo 64M, though, so I will still publish kernel configuration and device trees for it eventually.*
 
-- [Ubuntu on the Milk-V Duo S RISC-V](#ubuntu-on-the-milk-v-duo-s-risc-v)
-  - [What it is](#what-it-is)
+See [the Sophgo Linux Wiki](https://github.com/sophgo/linux/wiki) for a general state of the kernel support - as many pending patches have been applied to this distribution as is possible. See [Missing Features](#missing-features) for details.
+
+[*Arduino support is minimal, see the Arduino section below](#arduino-support)
+
+---
+
+**AI Disclosure**
+
+I am a software engineer, with extensive Linux experience, but I am new to the world of embedded computing. I have used AI extensively in this project, primarily for debugging, packaging, and generating sample configuration files, but also to a limited extent for generating code. There are small portions of purely AI generated code in this repo - specifically, the code which writes the WiFi enable pin register in `aic8800_bsp.c`, and similar code in `duos-usb-switch` for writing the USB host pin register. This code required applying concepts which are foreign to me, so my choices were largely "let the AI do it" or "live without it" - and with USB and WiFi, I was not willing to live without it.
+
+**This project's documentation is to remain 100% human-written under all circumstances. AI is exclusively for assisting with _code_.**
+
+`Assisted-By: Gemini:3-fast, Gemini:3.1-pro`
+
+---
+
+- [Ubuntu and Mainline Linux on the Milk-V Duo S/256M RISC-V](#ubuntu-and-mainline-linux-on-the-milk-v-duo-s256m-risc-v)
+  - [Pre-Built Image Downloads](#pre-built-image-downloads)
+  - [What this is](#what-this-is)
   - [Features](#features)
   - [Missing Features](#missing-features)
   - [Using the System](#using-the-system)
     - [Default Password](#default-password)
     - [First Boot](#first-boot)
     - [USB](#usb)
-    - [Pin Configuration](#pin-configuration)
       - [Changing the USB gadget IP address](#changing-the-usb-gadget-ip-address)
+      - [Windows Internet Connection Sharing](#windows-internet-connection-sharing)
+    - [Pin Configuration](#pin-configuration)
     - [WiFi + BT](#wifi--bt)
       - [Usage](#usage)
       - [Power](#power)
       - [Boot Warnings](#boot-warnings)
+    - [CPU Clock Speed](#cpu-clock-speed)
     - [Bootloader](#bootloader)
       - [Kernel Upgrades](#kernel-upgrades)
+    - [Arduino Support](#arduino-support)
+      - [Instructions](#instructions)
+      - [Arduino Feature Support Matrix](#arduino-feature-support-matrix)
   - [Notes](#notes)
   - [Building the System](#building-the-system)
     - [Setup](#setup)
@@ -31,19 +52,22 @@ Full-featured, general-purpose Ubuntu 22.04 distribution for Milk-V Duo S SBCs, 
     - [Advanced - Building Yourself](#advanced---building-yourself)
       - [Manual Build Sequence](#manual-build-sequence)
   - [Goals](#goals)
-    - [Kernel Methodology](#kernel-methodology)
-- [\[Below this line is old documentation, likely outdated, updates coming\]](#below-this-line-is-old-documentation-likely-outdated-updates-coming)
+    - [Stretch Goals](#stretch-goals)
   - [Credits](#credits)
   - [Setup](#setup-1)
   - [Before anything else](#before-anything-else)
   - [Creating the rootfs](#creating-the-rootfs)
   - [Flashing](#flashing)
 
-## What it is
+## Pre-Built Image Downloads
+
+<https://github.com/queenkjuul/milkv-duo-ubuntu/releases>
+
+## What this is
 
 This is a monorepo set up with git submodules to pull in:
 
-- Linux 7.0 with all necessary Milk-V Duo S patches
+- Linux 7.0 with all necessary Milk-V Duo S and 256M patches
 - Prebuilt vendor bootloader image and applicable patches
 - Scripts for cross-building .deb packages:
   - Linux 7.0
@@ -53,11 +77,12 @@ This is a monorepo set up with git submodules to pull in:
   - Milk-V `duo-pinmux` tool
   - [bluetui](https://github.com/pythops/bluetui) and [impala](https://github.com/pythops/impala) for managing wireless hardware
 - [`genimage` for building the SD image](https://github.com/pengutronix/genimage)
-- Scripts for generating an Ubuntu 22.04 userspace rootfs
+- Scripts for generating an Ubuntu 24.04 userspace rootfs
 
-Packages are hosted on Ubuntu PPA:
+Packages are hosted on Ubuntu PPAs:
 
 - <https://launchpad.net/~queenkjuul/+archive/ubuntu/milkv-duos>
+- <https://launchpad.net/~queenkjuul/+archive/ubuntu/milkv-duo256m>
 
 ## Features
 
@@ -66,24 +91,31 @@ Packages are hosted on Ubuntu PPA:
   - USB Serial (ACM): Connect to a PC with USB-C and log in over serial
   - USB Network (CDC-NCM) [formerly RNDIS]: Connect to a PC with USB-C and log in over SSH or otherwise access via network protocols
 - Modern Linux 7.0 mainline kernel (with minor device tree and driver patches)
-- Modern Ubuntu 22.04 userspace
+- Modern Ubuntu 24.04 userspace
 - Full USB Gadget support
 - Full USB Host support
-- Support for Duo S Ethernet
+- Support for Duo Ethernet
 - Working Wifi (at least 2.4GHz, 5GHz untested)
 - Working Bluetooth
-- I2S Audio driver (untested)
+- I2S Audio driver + Built-In Analog Audio
 - Automatic root partition expansion on first boot
+- SPI, I2C, UART, PWM all tested working
+- Device Tree Overlay support
+- [Partial Arduino support](#arduino-support)
 
 ## Missing Features
 
 - ~~Wifi (not mainlined, investigating vendor drivers)~~ nah bb wifi works now :sunglasses:
 - ~~Bluetooth~~ (same as wifi) :sunglasses:
 - ~~Software reboot (system hangs waiting for hardware reset button)~~ nah we got this now :)
-- U-Boot 2026.1 (system depends on vendor-supplied first stage bootloader (FSBL) which uses U-Boot 2021.10)
 - MIPI / CSI (Camera interface)
 - TPU support
 - Multimedia support (VIP)
+- SPI NOR / NAND Flash - I only have SD-based Duo boards to test with.
+- SPI and UART complain about DMA. DMA works for I2S/Audio, but not for SPI/UART. Can't work out why not.
+- USB mode switching has to be done via a hacky userspace script - the mainline USB drivers won't do dual-role correctly
+- Full kernel pinmuxing (kernel can use devices on the default pinmux, but fails to set properly defined pinmux values)
+- [Full Arduino support](#arduino-support)
 
 ## Using the System
 
@@ -116,14 +148,6 @@ You can switch to Host Mode (USB-A) with:
 
 `milkv-usb-mode host` and then reboot. There are systemd services that handle the initialization. If you disable those, use `milkv-usb-init` to set things up after boot.
 
-### Pin Configuration
-
-`duo-pinmux`, as provided by Milk-V, is also included in the system image. You can use it to reconfigure pins - all of the Duo S's hardware is exposed to the kernel via the device tree, but some of it may not work until you set the pins correctly. For example, to use `I2C4` via pins `B20` and `B21`, you must set pins `B20` and `B21` appropriately with `duo-pinmux`. After that, the `/dev/i2c-*` devices will work (you may need to `modprobe i2c-dev` first). Note that just because the `/dev/*` node appears, doesn't mean it works - you need to set the pins correctly. Only `/dev/ttyS0` (the boot console) and `/dev/ttyS4` (the bluetooth UART) are guaranteed to work at boot.
-
-Refer to the pinout chart below - the labels don't map 1:1 with the actual command options - use `duo-pinmux -l` for all of the valid options
-
-![](https://milkv.io/duo-s/duos-pinout.webp)
-
 #### Changing the USB gadget IP address
 
 __Note that these instructions differ from the Milk-V docs__
@@ -134,6 +158,46 @@ You can edit `/etc/systemd/network/10-usb0.network` to set the IP. You should ke
       addresses:
         - 192.168.42.1/24
 ```
+
+#### Windows Internet Connection Sharing
+
+1. Click Network icon in system tray on the Windows host
+2. Click "Network and Internet Settings"
+3. Click "Change Adapter Options"
+4. Right-click your default internet interface (probably your Wifi or Ethernet, but if you use Hyper-V, then you want "vEthernet (Hyper-V LAN Bridge)"), go to Properties
+5. Go to the Sharing tab
+6. Click the "Allow other network users to connect to the internet..." checkbox
+7. In the drop-down, select your USB NCM connection
+8.  Click OK
+9.  Right-click the USB NCM connection and go to Properties
+10. Select "Internet Protocol Version 4 (TCP/IP)" and click Properties
+11. Change the IP address to `192.168.42.137` and click OK
+
+Note that the network must be set as "Private" on the Windows side for this to work. You can check from an administor powershell:
+
+```powershell
+Get-NetworkConnectionProfile
+```
+
+If it is not `NetworkCategory: Private`, then run
+
+```powershell
+Set-NetConnectionProfile -InterfaceIndex XX -NetworkCategory Private
+``` 
+
+where `XX` is the index listed from `Get-NetworkConnectionProfile`
+
+### Pin Configuration
+
+`duo-pinmux`, as provided by Milk-V, is also included in the system image. You can use it to reconfigure pins - all of the Duo S's hardware is exposed to the kernel via the device tree, but some of it may not work until you set the pins correctly. For example, to use `I2C4` via pins `B20` and `B21`, you must set pins `B20` and `B21` appropriately with `duo-pinmux`. After that, the `/dev/i2c-*` devices will work (you may need to `modprobe i2c-dev` first). Note that just because the `/dev/*` node appears, doesn't mean it works - you need to set the pins correctly. Only `/dev/ttyS0` (the boot console) and `/dev/ttyS4` (the bluetooth UART) are guaranteed to work at boot.
+
+**For Duo 256M,** UART1 and UART3 are disabled in the devicetree, because in theory those UARTs are assigned to Arduino (though, uh, they don't currently seem to work). You can use a device tree overlay to re-enable them, see [`milkv-dt-overlays`](./milkv-dt-overlays/).
+
+Refer to the pinout chart below - the labels don't map 1:1 with the actual command options - use `duo-pinmux -l` for all of the valid options.
+
+__WARNING:__ the below chart has some mistakes, trust the output of duo-pinmux over the graphic. At minimum, I2C4_SDA and I2C4_SCL are swapped.
+
+![chart of the duo s pinout](https://milkv.io/duo-s/duos-pinout.webp)
 
 ### WiFi + BT
 
@@ -182,6 +246,30 @@ There are some false alarm errors on boot when using the wireless chip, but they
 
 Despite all of these dmesg errors, this boot did produce a working Wifi+BT system. Don't be fooled.
 
+(actually, I fixed most of this - if you're seeing errors and it works, then just live with it, but my most recent published code should show fewer warnings)
+
+### CPU Clock Speed
+
+[Despite these SoCs being advertised as 1GHz CPUs, the stock bootloader configuration sets the clock to 850MHz.](https://www.eevblog.com/forum/microcontrollers/a-couple-questions-about-milk-v-duo-boards/msg5555591/#msg5555591) The FSBL code has an "overdrive" mode which is not enabled by default and which increases the CPU speed to 1050MHz. In this distribution, a patch has been applied to the FSBL configuration which enables this flag, so the default images (starting with 7.0-rc7) will run at 1050MHz out of the box. I've found this to be perfectly stable, and without the chip getting hot.
+
+FSBL builds of both varieties will be made available, so you can choose which you want, but the pre-built images will ship the overdrive mode.
+
+The clock is set via the register at `0x3002908`. Note that these values are bitmasks, not integers. I haven't actually worked out the exact formula for changing values, but these 4 are named explicitly in the code:
+
+```ini
+0x00408101=800MHz
+0x00448101=850MHz # vendor default
+0x05508101=1000MHz
+0x05548101=1050MHz # this distribution default
+```
+
+You can thus change the CPU speed on the fly from userspace using `devmem2`:
+
+```sh
+# e.g. devmem2 0x3002908 w 0x05548101
+devmem2 0x3002908 w <SPEED>
+```
+
 ### Bootloader
 
 The system is set up with `/boot` on the root ext4 filesystem (`mmcblk0p3`), and `mmcblk0p1` mounted to `/boot/vendor`.
@@ -197,16 +285,43 @@ U-Boot supports the ethernet port, and distroboot supports network booting, and 
 
 When the SD card is generated, a `boot.sd` is generated from the kernel in the image, and installed to `/boot/vendor`. Kernel upgrades installed via APT will generate new `boot.sd` images, stored at `/boot/boot.sd-$KERNELVERSION` - they are not automatically installed to `/boot/vendor` (`mmcblk0p1`) - after you have confirmed that the new kernel works correctly by booting it, you can replace the old `/boot/vendor/boot.sd` with the new one. Because `boot.sd` is provided primarily as a failsafe should "distroboot" fail, the previous known-good `boot.sd` is left in place until you manually replace it.
 
+### Arduino Support
+
+This distribution's Linux kernel supports the pending Remoteproc and Mailbox drivers for the sg200x chips. This means that Linux is capable of uploading firmware to the "little core" and booting it. Unfortunately, there are issues getting all of the hardware working completely. GPIO-based proofs-of-concept do work, though, so you can toggle LEDs to your heart's content.
+
+**For Duo 256M,** UART1 and UART3 are disabled in the devicetree, because in theory those UARTs are assigned to Arduino (though, uh, they don't currently seem to work). You can use a device tree overlay to re-enable them, see [`milkv-dt-overlays`](./milkv-dt-overlays/).
+
+#### Instructions
+
+See the instructions in [the sophgo-arduino repo](./sophgo-arduino/README.md)
+
+#### Arduino Feature Support Matrix
+
+| Feature | Status              |
+| ------- | ------------------- |
+| GPIO    | Works! :sunglasses: |
+| UART    | Known Broken :sob:  |
+| I2C     | Untested            |
+| SPI     | Untested            |
+| PWM     | Untested            |
+| ADC     | Untested            |
+| Mailbox | Known Broken :sob:  |
+
+Additionally, while the kernel does succeed at loading firmware at boot, the small core does not actually run the sketch at boot. You need to restart the small core after booting Linux for it to work.
+
 ## Notes
 
 - While USB-C Serial is available, it doesn't initialize until late in the boot process, and does not display the kernel console. You will need to use the UART0 pins and connect to an adapter to troubleshoot boot problems.
 - Board has soft-reset but not soft-poweroff. `systemctl poweroff` will halt the system, but it remains powered as long as power is supplied.
+- On Duo S, `PWM0` (`pwmchip0/pwm0`) is hard-wired internally to the buck converter. Note how on the pinout diagram, only `PWM1-PWM15` are listed. Linux, however, will expose all 4 pins on `pwmchip0`, and if you write new values to the `pwm0` sysfs nodes, you will crash the entire board. I have shipped a udev rule which revokes write permissions from `pwm0` when it is detected, but there's nothing stopping you `chmod +w`'ing it. You shouldn't. You've been warned.
 
 ## Building the System
 
-Building SD images must be done either on an Ubuntu 22.04 VM, or using the provided Docker setup. Docker is highly recommended.
+Building the image from pre-built packages can be done on any system by using the Docker image. Building packages from source is only officially supported on Ubuntu 22.04, just like the duo-buildroot-sdk.
 
 __Be warned that the setup script will mangle your `/etc/apt/sources.list` file because it assumes it is running in either Docker or a VM. Can't say I didn't warn you!__
+
+__These instructions are incomplete and out of date! Goodspeed you, brave comrade!__
 
 ### Setup
 
@@ -246,7 +361,7 @@ or for `scripts/compile.sh`:
 
 ### Basic Customization
 
-You can run `build.sh -c` to set the system hostname and root password. You can modify `scripts/second-stage.sh` before running `build.sh` to customize more advanced settings, like DNS servers, ZRAM, `fstab`, and more. Lastly, you can modify `scripts/first-boot.sh` to modify the first-boot behavior, but this isn't recommended. Remember that any `.deb` files in the project root directory get installed in the target system as well.
+You can run `build.sh -c` to set the system hostname, root password, and CPU frequency mode. You can modify `scripts/second-stage.sh` before running `build.sh` to customize more advanced settings, like DNS servers, ZRAM, `fstab`, and more. Lastly, you can modify `scripts/first-boot.sh` to modify the first-boot behavior, but this isn't recommended. Any `.deb` files in the project root directory get installed in the target system as well.
 
 ### Advanced - Building Yourself
 
@@ -285,32 +400,22 @@ You can always reconfigure the kernel to remove what you don't want. The actual 
 
 The Milk-V SDK usage patterns are in some places replicated (hardware state is largely managed by shell scripts, USB NCM mode is the default) but the specific instructions are different.
 
-### Kernel Methodology
+### Stretch Goals
 
-As much as possible is "upstream"/"mainline". Some of the patches applied are likely to be pulled into Linux 7.0 (and some listed on the wiki as unmerged, like audio, have actually been pulled already) and a few I made myself. Wifi drivers are hacky and a little bit vibed but they work so ¯\_(ツ)_/¯
-
-1. Started with basline Linux 7.0-rc3 (and plan to rebase on future rcs, up to 7.0)
-2. Added LKML patches linked from [the Sophgo Linux Wiki](https://github.com/sophgo/linux/wiki)
-3. Added my own patches to the device tree:
-4. Fix device tree after applying upstream mdio-mux driver patch
-5. Enable USB OTG in Milk-V Duo S device tree
-6. Add watchdog timer device tree node (upstream watchdog patch doesn't apply cleanly)
-7. Enable watchdog timer device node in Milk-V Duo S device tree
-8. Enable `uart4` for `hci_uart` in Milk-V Duo S device tree
-
-===
-[Below this line is old documentation, likely outdated, updates coming]
-===
+- Device tree overlay management package: a tool to compile + add to u-boot + update u-boot, with source and examples
+- Arduino firmware support: ideally, the board shows up as an IP firwmare target for the Arduino IDE, but I'd settle for a shell tool to easily move firmware to `/lib/firmrware/cvirtos.elf` and then restart the little core.
 
 ## Credits
 
 By far the most useful reference reference was [Fishwaldo's `sophgo-sg200x-debian` project](https://github.com/Fishwaldo/sophgo-sg200x-debian). This was pretty invaluable.
 
-Everything below this line is from the original README.md of the repo I forked ([credit to ambraglow too, of course](https://github.com/ambraglow/milkv-duo-ubuntu)), so I don't give it my personal approval, but I will leave it here for visibility. The old instructions below will likely be removed, though; my scripts are only loosely similar.
+Credits below this line are from the original README.md of the repo I forked ([credit to ambraglow too, of course](https://github.com/ambraglow/milkv-duo-ubuntu)), so I don't give it my personal approval, but I will leave it here for visibility. The old instructions below will likely be removed, though; my scripts are only loosely similar.
 
 ![great friend julie](https://github.com/tvlad1234) *[different julie :)]*
 ![rootfs guide for risc-v](https://github.com/carlosedp/riscv-bringup/blob/master/Ubuntu-Rootfs-Guide.md)
 ![DO NOT THE CAT!!!](https://github.com/Mnux9)
+
+---
 
 ## Setup
 
