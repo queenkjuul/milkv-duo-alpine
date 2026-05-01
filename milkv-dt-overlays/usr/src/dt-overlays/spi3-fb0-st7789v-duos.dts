@@ -19,25 +19,31 @@
 
   The Duo S has some 1V8 GPIO pins, which are insufficient to drive
   the display, it's best to stick to A* pins vs C* pins.
+
+  This example uses all of the default pinmux settings as applied by the bootloader.
+  To see how to apply a different pinmux at boot, see the duo256m version of this file.
 */
 
 /dts-v1/;
 /plugin/;
 
 &spi3 {
-    status = "okay";
-    #address-cells = <1>;
-    #size-cells = <0>;
+  status = "okay";
+  #address-cells = <1>;
+  #size-cells = <0>;
 
-    display@0 {
-        compatible = "sitronix,st7789v";
-        reg = <0>;
-        spi-max-frequency = <50000000>;
-        rotate = <270>;
-        fps = <30>;
-        buswidth = <8>;
-        dc-gpios = <&porta 20 0>;
-        led-gpios = <&porta 19 0>;
-        status = "okay";
-    };
+  display@0 {
+    compatible = "sitronix,st7789v";
+    reg = <0>;
+    spi-max-frequency = <50000000>;
+    rotate = <270>;
+    fps = <30>;
+    buswidth = <8>;
+    // consult the Milk-V pinout charts online
+    // &porta 18 = XGPIOA[18], &portb 19 = XGPIOB[19], etc
+    // &porte / PWR_GPIO is not supported
+    dc-gpios = <&porta 20 0>;
+    led-gpios = <&porta 19 0>;
+    status = "okay";
+  };
 };

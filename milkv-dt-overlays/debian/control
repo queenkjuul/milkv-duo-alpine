@@ -11,7 +11,7 @@ Rules-Requires-Root: no
 
 Package: milkv-dt-overlays
 Architecture: riscv64
-Depends: ${misc:Depends} device-tree-compiler, u-boot-menu
+Depends: ${misc:Depends} device-tree-compiler, u-boot-menu, cpp
 Description: Tool for managing device tree overlays
  Presents a menu showing all locally supplied device
  tree overlay source files (/usr/src/dt-overlay/*.dts)

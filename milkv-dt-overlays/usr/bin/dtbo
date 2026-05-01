@@ -3,6 +3,7 @@
 set -e
 
 CONF=/etc/default/u-boot
+INC=/usr/src/dt-overlays/include
 
 COMMAND=$1
 FILE=$2
@@ -14,7 +15,7 @@ compile() {
   DST=$2
   [ -f "$SRC" ] || SRC="/usr/src/dt-overlays/$SRC"
   if [ -f "$SRC" ]; then
-    dtc -@ -I dts -O dtb -o $DST $SRC
+    cpp -nostdinc -I$INC -undef -x assembler-with-cpp $SRC | dtc -@ -I dts -O dtb -o $DST -
   else
     echo "File not found."
     exit 1

@@ -10,8 +10,9 @@ if [ "$1" = "configure" ]; then
   fi
   if dpkg -s linux-image-milkv-duos >/dev/null 2>&1; then
     cp /usr/src/dt-overlays/leds-duos.dts /usr/src/dt-overlays/leds.dts
-  elif dpkg -s linux-image-milkv-duo256m >/dev/null 2>&1; then
-    cp /usr/src/dt-overlays/leds-duo256m.dts /usr/src/dt-overlays/leds.dts
+  # duo256m LED not supported by kernel
+  # elif dpkg -s linux-image-milkv-duo256m >/dev/null 2>&1; then
+  #   cp /usr/src/dt-overlays/leds-duo256m.dts /usr/src/dt-overlays/leds.dts
   elif dpkg -s linux-image-milkv-duo >/dev/null 2>&1; then
     cp /usr/src/dt-overlays/leds-duo.dts /usr/src/dt-overlays/leds.dts
   fi

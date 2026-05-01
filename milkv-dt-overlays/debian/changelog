@@ -1,3 +1,9 @@
+milkv-dt-overlays (0.1.0) noble; urgency=medium
+
+  * Add pinmux macros, rename pins to match charts, add cpp step to compiler
+
+ -- Julie Hill <queenkjuul@pm.me>  Fri, 01 May 2026 03:37:37 +0000
+
 milkv-dt-overlays (0.0.2) noble; urgency=medium
 
   * Fix packaging bug

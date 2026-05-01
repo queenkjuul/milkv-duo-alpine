@@ -1,0 +1,68 @@
+/*
+  Device tree node for the Adafruit MiniPiTFT 1.13" Color TFT display.
+
+  **DO NOT ATTACH THE MiniPiTFT DIRECTLY TO THE DUO S HEADERS!**
+  **THIS OVERLAY REQUIRES MODIFICATION TO WORK ON DUO 64M/S!**
+
+  You must refer to the MiniPiTFT pinout to ensure the pins
+  connect to the right places.
+
+  This example assumes the following connections:
+
+    - GP3 - DC pin on display - pinmux as GPIO
+    - GP2 - Backlight controller - pinmux as GPIO
+    - GP9, GP10, GP11, GP12 - SPI bus to display - pinmux as SPI2
+
+  You can connect the button pins of the MiniPiTFT to any available GPIO
+
+  You can connect the I2C pins of the MiniPiTFT to I2C1 or I2C2
+
+  The Duo S has some 1V8 GPIO pins, which are insufficient to drive
+  the display, it's best to stick to A* pins vs C* pins.
+*/
+
+/dts-v1/;
+/plugin/;
+
+// You must include the board-specific 
+// pinmux map if using the PINMUX() macro
+#include <pinctrl-duo256m.h>
+
+&{pinctrl} {
+  st7789_pins: st7789-pins {
+    st7789-cfg {
+      // the number determines the function.
+      // 3 is usually GPIO, but use the duo-pinmux tool
+      // to confirm for each targeted pin
+      pinmux = <PINMUX(GP2, 3)>,
+                <PINMUX(GP3, 3)>;
+      bias-pull-up;
+      drive-strength-microamp = <10800>;
+      power-source = <3300>;
+    };
+  };
+};
+
+
+&spi2 {
+  status = "okay";
+  #address-cells = <1>;
+  #size-cells = <0>;
+  pinctrl-names = "default";
+  pinctrl-0 = <&st7789_pins>;
+
+  display@0 {
+    compatible = "sitronix,st7789v";
+    reg = <0>;
+    spi-max-frequency = <50000000>;
+    rotate = <270>;
+    fps = <30>;
+    buswidth = <8>;
+    // consult the Milk-V pinout charts online
+    // &porta 18 = XGPIOA[18], &portb 19 = XGPIOB[19], etc
+    // &porte / PWR_GPIO is not supported
+    dc-gpios = <&porta 18 GPIO_ACTIVE_HIGH>;
+    led-gpios = <&porta 19 GPIO_ACTIVE_HIGH>;
+    status = "okay";
+  };
+};

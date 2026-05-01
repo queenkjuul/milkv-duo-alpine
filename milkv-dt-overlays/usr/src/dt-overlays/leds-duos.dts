@@ -13,6 +13,9 @@
     
         cat /sys/class/leds/builtin/trigger
 
+    Note: The duo256m's built-in LED is not currently supported
+    on mainline Linux
+
 */
 /dts-v1/;
 /plugin/;
