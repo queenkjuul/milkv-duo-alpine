@@ -1,3 +1,17 @@
+# COMING SOON: Alpine Linux for Milk-V Duo RISC-V
+
+Forked from [my Ubuntu repo](https://github.com/queenkjuul/milkv-duo-ubuntu), where I have mainline Linux 7.0 running on Ubuntu. The bootloader and kernel work is shared, and I plan to port the userspace scripts from bash+systemd to ash+openrc for use here.
+
+Unlike the Ubuntu repo, I do hope to get these builds working with the vendor software stack. Alpine's use of `musl` will hopefully make that a bit more straightforward.
+
+Like my Ubuntu repo, I do intend to package mainline Linux 7.0, with my additional patches and devicetree work, as an option alongside the vendor stack for Alpine images. However, since `glibc` makes using the vendor userspace stack much harder on Ubuntu, it makes more sense [to me, at least] to use the vendor kernel here and the mainline kernel there.
+
+# Status
+
+Just getting started. Proof of concept SD images exist on my computer and boot on the Duo. Still working out the initial images. This repo is 100% Ubuntu work, except for this portion of this document.
+
+# **EVERYTHING BELOW THIS LINE IS IRRELEVANT AND SCHEDULED TO BE REMOVED**
+
 # Ubuntu and Mainline Linux on the Milk-V Duo S/256M RISC-V
 
 Full-featured, general-purpose Ubuntu 24.04 distribution for Milk-V Duo S and Duo 256M SBCs, built on the latest mainline 7.0 Linux kernel. Now with **Arduino!***
